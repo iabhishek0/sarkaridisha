@@ -1,6 +1,9 @@
 [build]
-  command = "node build.js"
+  command = "npx puppeteer browsers install chrome && node build.js"
   publish = "dist"
+
+[build.environment]
+  PUPPETEER_CACHE_DIR = "/opt/buildhome/.cache/puppeteer"
 
 [[edge_functions]]
   path = "/sarkaridisha-detail.html"
