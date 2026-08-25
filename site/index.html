@@ -1,0 +1,1113 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SarkariDisha — Govt Jobs, Results &amp; Admit Cards</title>
+<meta name="description" content="SarkariDisha brings you the latest government job notifications, exam results, admit cards and answer keys from across India — updated regularly, in English and Hindi.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://sarkaridisha.netlify.app/">
+
+<!-- Open Graph / Facebook / WhatsApp preview -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SarkariDisha">
+<meta property="og:title" content="SarkariDisha — Govt Jobs, Results &amp; Admit Cards">
+<meta property="og:description" content="Latest government job notifications, exam results, admit cards and answer keys — updated regularly, in English and Hindi.">
+<meta property="og:url" content="https://sarkaridisha.netlify.app/">
+<meta property="og:locale" content="en_IN">
+<meta property="og:image" content="https://sarkaridisha.netlify.app/og-image.png">
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SarkariDisha — Govt Jobs, Results &amp; Admit Cards">
+<meta name="twitter:description" content="Latest government job notifications, exam results, admit cards and answer keys — updated regularly.">
+<meta name="twitter:image" content="https://sarkaridisha.netlify.app/og-image.png">
+
+<!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script src="https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202608060101/show_ads_impl.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "SarkariDisha",
+  "url": "https://sarkaridisha.netlify.app/",
+  "description": "Independent information portal for Indian government job notifications, results, admit cards and answer keys.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://sarkaridisha.netlify.app/?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1651008634632225" crossorigin="anonymous" data-checked-head="true"></script>
+<style>
+  :root{
+    --ink:#16233D;
+    --ink-deep:#0D1626;
+    --paper:#FAF7F0;
+    --paper-alt:#F1EADA;
+    --marigold:#B8790F;
+    --marigold-light:#E8A93D;
+    --teal:#1B6B6B;
+    --green:#256B45;
+    --red:#A6321E;
+    --line:#D8CFB8;
+    --line-strong:#B9AE8E;
+    --shadow:0 2px 8px rgba(22,35,61,.08), 0 1px 2px rgba(22,35,61,.06);
+    --shadow-lg:0 8px 24px rgba(22,35,61,.14), 0 2px 6px rgba(22,35,61,.08);
+  }
+  *{box-sizing:border-box;}
+  .ad-slot{margin:22px auto;text-align:center;}
+  .ad-slot .ad-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.4;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;}
+  .ad-728-wrap{max-width:728px;margin:0 auto;overflow-x:auto;}
+  .ad-300-wrap{max-width:300px;margin:0 auto;}
+  .ad-native-wrap{max-width:1180px;margin:0 auto;padding:0 20px;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px;}
+
+  /* Utility bar */
+  .utility{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.02em;
+  }
+  .utility .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    height:34px;
+    gap:16px;
+  }
+  .utility .date{opacity:.75;white-space:nowrap;}
+  .ticker-track{
+    flex:1;
+    overflow:hidden;
+    position:relative;
+    height:34px;
+    display:flex;align-items:center;
+  }
+  .ticker-inner{
+    display:inline-flex;
+    gap:48px;
+    white-space:nowrap;
+    animation:scroll-left 55s linear infinite;
+  }
+  .ticker-track:hover .ticker-inner{
+    animation-play-state:paused;
+  }
+  .ticker-inner span{color:#F2C879;}
+  .ticker-inner a{
+    color:var(--paper);text-decoration:none;
+    padding-bottom:1px;
+  }
+  .ticker-inner a:hover{
+    color:#F2C879;border-bottom:1px solid #F2C879;
+  }
+  @keyframes scroll-left{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  .lang-toggle{display:flex;gap:2px;flex-shrink:0;}
+  .lang-toggle button{
+    font-family:inherit;font-size:11px;
+    background:transparent;border:1px solid rgba(250,247,240,.35);
+    color:var(--paper);padding:3px 9px;cursor:pointer;
+  }
+  .lang-toggle button.active{background:var(--paper);color:var(--ink);border-color:var(--paper);}
+
+  /* Masthead */
+  .masthead{
+    border-bottom:3px solid var(--ink);
+    padding:26px 0 18px;
+  }
+  .masthead .wrap{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:16px;}
+  .stamp-logo{
+    width:58px;height:58px;flex-shrink:0;object-fit:contain;
+  }
+  .brand-text h1{
+    font-family:'Zilla Slab',serif;
+    font-size:34px;font-weight:700;margin:0;letter-spacing:-.01em;
+  }
+  .brand-text p{
+    margin:2px 0 0;font-size:12.5px;color:#33291A;letter-spacing:.03em;font-weight:600;
+  }
+  .search-box{
+    display:flex;border:1.5px solid var(--ink);
+  }
+  .search-box input{
+    font-family:'IBM Plex Sans',sans-serif;
+    border:none;background:transparent;padding:9px 12px;font-size:13.5px;
+    width:230px;outline:none;color:var(--ink);
+  }
+  .search-box button{
+    border:none;background:var(--ink);color:var(--paper);
+    padding:0 16px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+    cursor:pointer;letter-spacing:.04em;
+  }
+
+  /* Hero */
+  .hero{
+    background:linear-gradient(135deg, var(--ink) 0%, var(--ink-deep) 100%);
+    color:var(--paper);
+    padding:44px 0 38px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;top:-60px;right:-60px;width:280px;height:280px;
+    border:2px solid rgba(232,169,61,.15);border-radius:50%;
+  }
+  .hero::after{
+    content:"";position:absolute;top:-20px;right:-20px;width:280px;height:280px;
+    border:1px solid rgba(232,169,61,.1);border-radius:50%;
+  }
+  .hero .wrap{position:relative;z-index:1;}
+  .hero h2{
+    font-family:'Zilla Slab',serif;font-size:32px;font-weight:700;margin:0 0 10px;
+    max-width:560px;line-height:1.25;
+  }
+  .hero h2 span{color:var(--marigold-light);}
+  .hero-sub{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:#C9C2A8;
+    margin:0 0 24px;letter-spacing:.02em;
+  }
+  .hero-search{
+    display:flex;max-width:560px;box-shadow:var(--shadow-lg);
+  }
+  .hero-search input{
+    flex:1;border:none;padding:14px 16px;font-size:14.5px;
+    font-family:'IBM Plex Sans',sans-serif;outline:none;background:var(--paper);color:var(--ink);
+  }
+  .hero-search button{
+    border:none;background:var(--marigold);color:var(--ink-deep);
+    padding:0 22px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;
+    cursor:pointer;letter-spacing:.04em;
+  }
+  .hero-search button:hover{background:var(--marigold-light);}
+
+  /* Nav tabs */
+  .tabbar{background:var(--paper-alt);border-bottom:1px solid var(--line-strong);}
+  .tabbar .wrap{display:flex;gap:4px;overflow-x:auto;}
+  .tab{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;letter-spacing:.03em;
+    padding:13px 18px;border:none;background:transparent;color:var(--ink);
+    cursor:pointer;white-space:nowrap;position:relative;opacity:.65;
+    border-bottom:3px solid transparent;
+    display:flex;align-items:center;gap:7px;
+    transition:opacity .15s, border-color .15s;
+  }
+  .tab svg{width:15px;height:15px;flex-shrink:0;}
+  .tab:hover{opacity:.9;}
+  .tab.active{opacity:1;border-bottom-color:var(--marigold);font-weight:700;}
+
+  /* Content grid */
+  .board{padding:36px 0 60px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+  .see-more{margin-top:10px;text-align:center;}
+  .see-more a{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--marigold);
+    letter-spacing:.03em;
+  }
+  .see-more a:hover{color:var(--marigold-light);text-decoration:underline;}
+  .col{border-left:none;}
+  .col-inner{padding:0;}
+  .col-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:14px;
+  }
+  .col-head h2{
+    font-family:'Zilla Slab',serif;font-size:20px;margin:0;font-weight:700;
+  }
+  .col-head .count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#524628;font-weight:600;}
+
+  .listing{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-left:4px solid var(--line-strong);
+    border-radius:6px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    box-shadow:var(--shadow);
+    transition:transform .15s, box-shadow .15s, border-left-color .15s;
+    position:relative;
+  }
+  .listing:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-lg);
+  }
+  .col[data-col="job"] .listing{border-left-color:var(--marigold);}
+  .col[data-col="job"] .listing:hover{border-left-color:var(--marigold-light);}
+  .col[data-col="result"] .listing{border-left-color:var(--green);}
+  .col[data-col="admit"] .listing{border-left-color:var(--teal);}
+  .col[data-col="key"] .listing{border-left-color:var(--red);}
+  .col[data-col="admission"] .listing{border-left-color:#6B4FA0;}
+  .listing-top{display:flex;align-items:flex-start;gap:8px;}
+  .listing a.title{
+    font-size:15px;font-weight:600;line-height:1.45;flex:1;
+  }
+  .listing a.title:hover{color:var(--marigold);text-decoration:underline;}
+  .meta{
+    display:flex;gap:10px;margin-top:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:#453A24;font-weight:500;
+    flex-wrap:wrap;
+  }
+  .meta .urgent{color:var(--red);font-weight:700;}
+  .meta .ok{color:var(--green);font-weight:700;}
+
+  .stamp{
+    flex-shrink:0;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px;font-weight:600;letter-spacing:.06em;
+    border:1.5px solid var(--red);color:var(--red);
+    border-radius:999px;padding:2px 7px;
+    transform:rotate(-5deg);
+    white-space:nowrap;
+    animation:badge-blink 1.3s ease-in-out infinite;
+  }
+  .stamp.green{border-color:var(--green);color:var(--green);}
+  .stamp.blue{border-color:var(--teal);color:var(--teal);}
+  .stamp.amber{border-color:var(--marigold);color:var(--marigold);}
+  .stamp.purple{border-color:#6B4FA0;color:#6B4FA0;}
+  .stamp.grey{border-color:#6b6558;color:#6b6558;}
+  @keyframes badge-blink{
+    0%, 100%{opacity:1;}
+    50%{opacity:0.35;}
+  }
+
+  /* Footer */
+  footer{
+    background:var(--ink);color:var(--paper);padding:26px 0;
+  }
+  footer .wrap{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;}
+  footer p{
+    margin:0;font-size:12.5px;line-height:1.7;color:#CBC4A9;max-width:640px;font-weight:500;
+  }
+  footer .fbrand{font-family:'Zilla Slab',serif;font-size:16px;font-weight:600;color:var(--paper);}
+
+  @media (max-width:860px){
+    .grid3{grid-template-columns:1fr;}
+    .brand-text h1{font-size:26px;}
+    .utility .wrap{height:auto;flex-wrap:wrap;padding:6px 20px;gap:8px;}
+    .ticker-track{width:100%;order:3;}
+    .masthead .wrap{gap:14px;}
+    .search-box{width:100%;}
+    .search-box input{width:auto;flex:1;}
+    footer .wrap{flex-direction:column;align-items:flex-start;gap:14px;}
+    .hero h2{font-size:26px;}
+    .hero-search{max-width:100%;}
+  }
+
+  @media (max-width:480px){
+    .brand-text h1{font-size:22px;}
+    .brand-text p{font-size:11px;}
+    .stamp-logo{width:46px;height:46px;}
+    .col-head h2{font-size:18px;}
+    .listing a.title{font-size:14.5px;}
+    .tab{padding:11px 14px;font-size:12px;}
+    .wrap{padding:0 14px;}
+    .hero{padding:32px 0 28px;}
+    .hero h2{font-size:22px;}
+    .hero-sub{font-size:12px;}
+    .ticker-inner{animation-duration:80s;}
+  }
+  /* Cross-promo: SarkariDisha Tools */
+  .tools-promo{background:var(--paper-alt);border-top:2px solid var(--marigold);border-bottom:1px solid var(--line-strong);padding:10px 0;}
+  .tools-promo-inner{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;text-align:center;
+    max-width:1180px;margin:0 auto;padding:0 20px;
+  }
+  .tools-promo-icon{font-size:16px;}
+  .tools-promo-text{font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--ink);}
+  .tools-promo-text strong{color:var(--marigold);}
+  .tools-promo-btn{
+    background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;font-weight:700;padding:7px 16px;border-radius:999px;white-space:nowrap;
+    transition:background .15s;
+  }
+  .tools-promo-btn:hover{background:var(--marigold);}
+  @media (max-width:600px){
+    .tools-promo-text{font-size:12px;}
+  }
+/* Floating promo badge for SarkariDisha Tools (sister site) */
+  .tools-float-badge{
+    position:fixed;right:18px;bottom:18px;z-index:60;
+    display:flex;align-items:center;gap:9px;
+    background:linear-gradient(135deg, #16233D 0%, #0D1626 100%);
+    color:#FAF7F0;
+    padding:10px 15px;border-radius:999px;
+    box-shadow:0 8px 24px rgba(22,35,61,.22), 0 2px 6px rgba(22,35,61,.14);
+    text-decoration:none;
+    border:1px solid rgba(232,169,61,.35);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .tools-float-badge:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(22,35,61,.28);}
+  .tools-float-icon{font-size:17px;line-height:1;}
+  .tools-float-text{display:flex;flex-direction:column;line-height:1.25;}
+  .tools-float-label{font-family:'Zilla Slab',serif;font-weight:700;font-size:12.5px;color:#E8A93D;}
+  .tools-float-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#C9C2A8;letter-spacing:.02em;}
+  @media (max-width:600px){
+    .tools-float-badge{right:12px;bottom:12px;padding:9px 12px;gap:7px;}
+    .tools-float-sub{display:none;}
+    .tools-float-label{font-size:11.5px;}
+  }
+</style>
+<meta http-equiv="origin-trial" content="AlK2UR5SkAlj8jjdEc9p3F3xuFYlF6LYjAML3EOqw1g26eCwWPjdmecULvBH5MVPoqKYrOfPhYVL71xAXI1IBQoAAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3NTgwNjcxOTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="Amm8/NmvvQfhwCib6I7ZsmUxiSCfOxWxHayJwyU1r3gRIItzr7bNQid6O8ZYaE1GSQTa69WwhPC9flq/oYkRBwsAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3NTgwNjcxOTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A9nrunKdU5m96PSN1XsSGr3qOP0lvPFUB2AiAylCDlN5DTl17uDFkpQuHj1AFtgWLxpLaiBZuhrtb2WOu7ofHwEAAACKeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElNdWx0aW1vZGFsSW5wdXQiLCJleHBpcnkiOjE3NzQzMTA0MDAsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A93bovR+QVXNx2/38qDbmeYYf1wdte9EO37K9eMq3r+541qo0byhYU899BhPB7Cv9QqD7wIbR1B6OAc9kEfYCA4AAACQeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElNdWx0aW1vZGFsSW5wdXQiLCJleHBpcnkiOjE3NzQzMTA0MDAsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A1S5fojrAunSDrFbD8OfGmFHdRFZymSM/1ss3G+NEttCLfHkXvlcF6LGLH8Mo5PakLO1sCASXU1/gQf6XGuTBgwAAACQeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElNdWx0aW1vZGFsSW5wdXQiLCJleHBpcnkiOjE3NzQzMTA0MDAsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"></head>
+<body>
+
+  <div class="utility">
+    <div class="wrap">
+      <div class="date" id="todayDate">Tue, 11 Aug, 2026</div>
+      <div class="ticker-track">
+        <div class="ticker-inner" id="tickerInner"><a href="sarkaridisha-detail.html?id=188"><span>●</span> UPSC IES / ISS Answer Key 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=187"><span>●</span> UPSC IES / ISS Result 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=186"><span>●</span> ICSI Executive Assistant Online Form 2026 - Start</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=185"><span>●</span> RRB ALP CBT-II Answer Key 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=184"><span>●</span> Rajasthan State Eligibility Test SET Online Form  – 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=183"><span>●</span> SKAU Kurukshetra Non Teaching Post Online Form 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=182"><span>●</span> SJVN Various Post Online Form 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=181"><span>●</span> RCFL Management Trainee MT Online Form 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=180"><span>●</span> ITBP CAPF Medical Officer 2026 Online Form</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=179"><span>●</span> SAV Bihar Class 6 Online Form (Session 2027-28)</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=178"><span>●</span> AFCAT 02/2026 Admit Card</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=177"><span>●</span> MPESB Group-2 Sub Group-4 Patwari  Form  2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=188"><span>●</span> UPSC IES / ISS Answer Key 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=187"><span>●</span> UPSC IES / ISS Result 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=186"><span>●</span> ICSI Executive Assistant Online Form 2026 - Start</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=185"><span>●</span> RRB ALP CBT-II Answer Key 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=184"><span>●</span> Rajasthan State Eligibility Test SET Online Form  – 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=183"><span>●</span> SKAU Kurukshetra Non Teaching Post Online Form 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=182"><span>●</span> SJVN Various Post Online Form 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=181"><span>●</span> RCFL Management Trainee MT Online Form 2026</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=180"><span>●</span> ITBP CAPF Medical Officer 2026 Online Form</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=179"><span>●</span> SAV Bihar Class 6 Online Form (Session 2027-28)</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=178"><span>●</span> AFCAT 02/2026 Admit Card</a> &nbsp; &nbsp; <a href="sarkaridisha-detail.html?id=177"><span>●</span> MPESB Group-2 Sub Group-4 Patwari  Form  2026</a></div>
+      </div>
+      <div class="lang-toggle">
+        <button id="langEnBtn" class="active" onclick="setLanguage('en')">EN</button>
+        <button id="langHiBtn" onclick="setLanguage('hi')">हिं</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="wrap">
+      <div class="brand">
+        <img src="sarkaridisha-logo.png" alt="SarkariDisha" class="stamp-logo">
+        <div class="brand-text">
+          <h1>SarkariDisha</h1>
+          <p data-i18n="tagline">GOVT JOB NOTICES · RESULTS · ADMIT CARDS</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tools-promo">
+    <div class="tools-promo-inner">
+      <span class="tools-promo-icon">🛠️</span>
+      <span class="tools-promo-text">Need help filling your form? Try <strong>SarkariDisha Tools</strong> — free tools to complete your application faster.</span>
+      <a href="https://sarkaridishatools.netlify.app/" target="_blank" rel="noopener" class="tools-promo-btn">Open Tools →</a>
+    </div>
+  </div>
+
+  <div class="ad-slot">
+    <div class="ad-label">Advertisement</div>
+    <div class="ad-728-wrap">
+      <script>
+        atOptions = {
+          'key' : '92cb9efa9b20ffeb9a89af490cda8c1a',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script src="https://www.highperformanceformat.com/92cb9efa9b20ffeb9a89af490cda8c1a/invoke.js"></script>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <h2 data-i18n="heroHeadline">Find your next <span>government job</span>, all in one place</h2>
+      <p class="hero-sub" data-i18n="heroSub">Notifications · Results · Admit Cards · Answer Keys — updated regularly</p>
+      <div class="hero-search">
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Search post, exam, department…">
+        <button onclick="applySearch()" data-i18n="searchBtn">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabbar">
+    <div class="wrap">
+      <button class="tab active" data-filter="all">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path></svg>
+        <span data-i18n="tabAll">All Boards</span>
+      </button>
+      <button class="tab" data-filter="job">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        <span data-i18n="tabJobs">Latest Jobs</span>
+      </button>
+      <button class="tab" data-filter="admit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z"></path></svg>
+        <span data-i18n="tabAdmit">Admit Cards</span>
+      </button>
+      <button class="tab" data-filter="result">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"></circle><path d="M8.5 12.5 7 21l5-3 5 3-1.5-8.5"></path></svg>
+        <span data-i18n="tabResults">Results</span>
+      </button>
+      <button class="tab" data-filter="key">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"></circle><path d="M10.5 12.5 20 3M17 6l2 2M14 9l2 2"></path></svg>
+        <span data-i18n="tabKeys">Answer Keys</span>
+      </button>
+      <button class="tab" data-filter="admission">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 8l10 5 10-5-10-5Z"></path><path d="M6 10.5V16c0 1 3 2.5 6 2.5s6-1.5 6-2.5v-5.5"></path></svg>
+        <span data-i18n="tabAdmission">Admission</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="board">
+    <div class="wrap grid3">
+      <div class="col" data-col="job">
+        <div class="col-inner">
+          <div class="col-head"><h2 data-i18n="colJobs">Latest Jobs</h2><span class="count">83 items</span></div>
+          <div class="listings"><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=186">ICSI Executive Assistant Online Form 2026 - Start</a>
+          <span class="stamp amber">CLOSING SOON</span>
+        </div>
+        <div class="meta"><span>ICSI</span><span>20 Posts</span><span class="">Apply By  : 12 August 2026</span><span>Advt. No.: 04/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=184">Rajasthan State Eligibility Test SET Online Form  – 2026</a>
+          <span class="stamp purple">EXTENDED</span>
+        </div>
+        <div class="meta"><span>SET</span><span class="">Apply By  : 10 August 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=183">SKAU Kurukshetra Non Teaching Post Online Form 2026</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>SKAU</span><span>60 Posts</span><span class="urgent">Apply  By  : 21 August 2026</span><span>Advt No. : NT-01/2026 to 03/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=182">SJVN Various Post Online Form 2026</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>SJVN</span><span>21 Posts</span><span class="urgent">Apply By  : 26 August 2026</span><span>Advt. No. SJVN:127/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=181">RCFL Management Trainee MT Online Form 2026</a>
+          <span class="stamp blue">COMING SOON</span>
+        </div>
+        <div class="meta"><span>RCFL</span><span>94 Posts</span><span class="">Apply By : 24 August 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=180">ITBP CAPF Medical Officer 2026 Online Form</a>
+          <span class="stamp blue">COMING SOON</span>
+        </div>
+        <div class="meta"><span>ITBP</span><span>282 Posts</span><span class="">Apply By : 08 September 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=177">MPESB Group-2 Sub Group-4 Patwari  Form  2026</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>MPESB</span><span>2106 Posts</span><span class="urgent">Apply By  : 18 August 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=174">UPSSSC PET Online Form 2026 – Start</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>UPSSSC</span><span class="urgent">Apply By  : 1 September 2026</span><span>Advt No : 16 Exam/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=173">UPPSC Architectural Assistant Various Post Online Form 2026</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>UPPSC</span><span>37 Posts</span><span class="urgent">Apply By  : 03 September 2026</span><span>Advt No : A-3/E-1/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=168">UPPSC Computer Operator Various Post Online Form 2026</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>UPPSC</span><span>10 Posts</span><span class="urgent">Apply By : 03 September 2026</span><span>Advt No : A-2/E-1/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=167">UPPSC Pre Online Form 2026</a>
+          
+        </div>
+        <div class="meta"><span>UPPSC</span><span>500 Posts</span><span>Advt No : A-1/E-1/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=166">UPSSSC Auditor / Assistant Accountant Online Form 2026</a>
+          <span class="stamp amber">CLOSING SOON</span>
+        </div>
+        <div class="meta"><span>UPSSSC</span><span>1957 Posts</span><span class="">Apply By : 03 August 2026</span><span>Advt. No. 14/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=165">Indian Navy SSC Officer June 2027 Online Form – Today Last Date</a>
+          <span class="stamp amber">CLOSING SOON</span>
+        </div>
+        <div class="meta"><span>Indian Navy</span><span>275 Posts</span><span class="">Apply By  : 03 August 2026 Extended</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=164">Uttarakhand TET UTET Online Form 2026 – Today Last Date</a>
+          <span class="stamp amber">CLOSING SOON</span>
+        </div>
+        <div class="meta"><span>UTET</span><span>N/A Posts</span><span class="">Apply By  : 03 August 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=158">IBPS Clerk (CSA) 16th Online Form 2026</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>IBPS</span><span>11403 Posts</span><span class="urgent">Apply By  : 21 August 2026</span></div></div></div>
+          <div class="see-more" style="display: block;"><a href="sarkaridisha-category.html?cat=job">See More →</a></div>
+        </div>
+      </div>
+      <div class="col" data-col="admit">
+        <div class="col-inner">
+          <div class="col-head"><h2 data-i18n="colAdmit">Admit Cards</h2><span class="count">22 items</span></div>
+          <div class="listings"><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=178">AFCAT 02/2026 Admit Card</a>
+          
+        </div>
+        <div class="meta"><span>AFCAT</span><span>142 Posts</span><span class="">Admit Card Available : 05 August 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=172">BSNL Junior Telecom Officer JTO Exam Date 2026 – Out</a>
+          <span class="stamp blue">COMING SOON</span>
+        </div>
+        <div class="meta"><span>BSNL</span><span>100 Posts</span><span>Advt. No. BSNLCO-14/12(11)/1/2026-RECTT-CO</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=157">Railway RRB Group D Admit Card 2026 – Out</a>
+          
+        </div>
+        <div class="meta"><span>RRB</span><span>22,195 Posts</span><span class="">Admit Card :  Available Now</span><span>Advt. No. CEN 09/2025</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=156">Bihar Police BPSSC ASI (Technical) Exam Date 2026  Exam Postponed</a>
+          
+        </div>
+        <div class="meta"><span>BPSSC</span><span>22 Posts</span><span class="">Admit Card Available : 24 July 2026</span><span>Advt.No. 07/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=128">SSC Delhi Police HC (Ministerial) PE &amp; MT Admit Card 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>SSC (Delhi Police)</span><span>456 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=122">Delhi High Court Higher Judicial Service HJS Admit Card 2026</a>
+          
+        </div>
+        <div class="meta"><span>High Court of Delhi</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=120">RSSB Computer Instructor Exam Date 2026</a>
+          
+        </div>
+        <div class="meta"><span>RSSB</span><span>Advt. No. : 07/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=76">UPSSSC Lower PCS Mains Exam Fee Payment 2026</a>
+          
+        </div>
+        <div class="meta"><span>UPSSSC</span><span class="">Mains Exam Fee Payment : 20 July 2026</span><span>Advt. No. 07 Exam 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=75">UPSSSC Agriculture Technical Assistant Group-C Mains Exam Fee Payment 2026 – Link Active</a>
+          
+        </div>
+        <div class="meta"><span>UPSSSC</span><span class="">Eligibility Result : 02 July 2026</span><span>Advt. No. 06 Exam 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=74">BSUSC Bihar Assistant Professor Interview Letter 2026</a>
+          
+        </div>
+        <div class="meta"><span>BSUSC</span><span class="">Interview Letter Available  : 19 July 2026</span><span>BSUSC/CAP-01 to 06/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=56">RPSC Junior Legal Officer JLO Admit Card 2026</a>
+          
+        </div>
+        <div class="meta"><span>RPSC</span><span class="">Admit Card  Available : 23 July 2026</span><span>Advt No. : 08/2025-26</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=46">RRB ALP CBT-II Exam City Details Out – 2026</a>
+          
+        </div>
+        <div class="meta"><span>RRB</span><span class="">CBT-II Exam City Details : 18 July 2026</span><span>CEN – 01/2025</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=45">Bihar BPSC 72 Pre Exam Postponed 2026</a>
+          
+        </div>
+        <div class="meta"><span>BPSC</span><span class="">Admit Card : Available Soon</span><span>N/A</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=44">CBSE Board 12th Supplementary Date Sheet 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>CBSE</span><span class="">Class 12th Re-Evaluation Result Declared Date : 21 June 2026</span><span>N/A</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=43">SBI PO Pre Exam Training PET 2026</a>
+          
+        </div>
+        <div class="meta"><span>SBI</span><span class="">Pre Exam Training  PET Available : 17 July 2026</span><span>Advt. No. CRPD/PO/2026-27/09</span></div></div></div>
+          <div class="see-more" style="display: block;"><a href="sarkaridisha-category.html?cat=admit">See More →</a></div>
+        </div>
+      </div>
+      <div class="col" data-col="result">
+        <div class="col-inner">
+          <div class="col-head"><h2 data-i18n="colResults">Results</h2><span class="count">35 items</span></div>
+          <div class="listings"><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=187">UPSC IES / ISS Result 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>UPSC</span><span>44 Posts</span><span>Advt. No. 07/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=176">SSC MTS / Havaldar Result 2026 – Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>SSC</span><span>7948 Posts</span><span class="ok">Result Available</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=175">Bihar CET B.Ed 4th Round Allotment Result 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>CET</span><span class="ok">Result Available</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=171">SSC JE Engineer Final Result Out  – 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>JE</span><span>1731 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=170">Bihar BSSC Office Attendant Final Result Out -  2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>BSSC</span><span>238 Posts</span><span class="ok">Final Result :  Available</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=162">UP Police Constable 2026 –  Result Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>Police</span><span>32,679 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=160">SSC Stenographer C, D 2025 Revised FRTA Result/ Cutoff</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>SSC</span><span>1590 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=159">NABARD Assistant Manager Grade-A Score Card 2026 – Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>NABARD</span><span>91 Posts</span><span class="ok">Score Card :  Available Now</span><span>Advt.No. 01 /Grade A/2025-26</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=146">BCECE Admission 2026 1st Round Allotment Result</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>BCECE</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=145">SWD UP IAS / PCS Free Coaching Result Out - 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>IAS / PCS</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=144">JSSC Excise Constable JECCE Result Out – 2023</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>JSSC</span><span>583 Posts</span><span>Advt No. : 06/2023</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=143">UP PGT Final Result 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>PGT</span><span>4163 Posts</span><span>Advt No. : 01/2022 &amp; 02/2022</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=141">UPSSSC Excise Constable Eligibility Result Out – 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>UPSSSC</span><span>820 Posts</span><span>Advt. No. 08 Exam 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=140">Bank of Baroda Office Assistant Final Result Out  – 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>BOB</span><span>500 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=137">UP TGT 2022 Final Result – Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>TGT</span><span>3539 Posts</span><span>Advt No. : 01/2022</span></div></div></div>
+          <div class="see-more" style="display: block;"><a href="sarkaridisha-category.html?cat=result">See More →</a></div>
+        </div>
+      </div>
+      <div class="col" data-col="key">
+        <div class="col-inner">
+          <div class="col-head"><h2 data-i18n="colKeys">Answer Keys</h2><span class="count">10 items</span></div>
+          <div class="listings"><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=188">UPSC IES / ISS Answer Key 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>UPSC</span><span>44 Posts</span><span>Advt. No. 07/2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=185">RRB ALP CBT-II Answer Key 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>RRB</span><span>10970 Posts</span><span>CEN – 01/2025</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=163">UP Police Constable 2026 –  Result Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>Police</span><span>32,679 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=161">RRB Ministerial &amp; Isolated Category Answer Key 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>RRB</span><span>312 Posts</span><span class="">Answer Key :  Available</span><span>Advt No. : CEN 08/2025</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=123">MPESB PNST Answer Key 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>MPESB</span><span class="">Answer Key Available : 14 July 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=103">EMRS Teaching/ Non Teaching Tier-II Answer Key 2026 – Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>EMRS</span><span class="">Tier-II Answer Key Available  : 13 May 2026</span><span>Advt.No. NESTS/Adv/2025/01</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=102">KVS NVS Teaching &amp; Non-Teaching Tier-II Answer Key 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>KVS &amp; NVS</span><span>15,762 Posts</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=101">UPSSSC Assistant Boring Technician Answer Key 2026 – Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>UPSSSC</span><span class="">Apply By : 05 May 2026</span><span>Advt. No. 04 Exam 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=100">SSB HC (Ministerial) Answer Key 2026</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>SSB</span><span class="">Available Now 09 July 2026</span><span>338/RC/SSB/HC(Min)/2020</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=70">RSSB Forester Answer Key 2026 – Out</a>
+          <span class="stamp green">DECLARED</span>
+        </div>
+        <div class="meta"><span>RSSB</span><span class="">Answer Key : 20 July 2026</span><span>Advt. No. 01/2026</span></div></div></div>
+          <div class="see-more" style="display:none;"><a href="#">See More →</a></div>
+        </div>
+      </div>
+      <div class="col" data-col="admission">
+        <div class="col-inner">
+          <div class="col-head"><h2 data-i18n="colAdmission">Admission</h2><span class="count">2 items</span></div>
+          <div class="listings"><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=179">SAV Bihar Class 6 Online Form (Session 2027-28)</a>
+          <span class="stamp ">NEW</span>
+        </div>
+        <div class="meta"><span>SAV</span><span>120 Posts</span><span class="urgent">Apply By  : 18 August 2026</span></div></div><div class="listing">
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=67">NVS Class 6 Online Form 2027-28</a>
+          
+        </div>
+        <div class="meta"><span>NVS</span><span>665 seats Posts</span><span class="">Last Date for Apply Online : 31 July 2026</span><span>N/A</span></div></div></div>
+          <div class="see-more" style="display:none;"><a href="#">See More →</a></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="ad-slot">
+    <div class="ad-label">Advertisement</div>
+    <div class="ad-native-wrap">
+      <script async="async" data-cfasync="false" src="https://pl30785801.effectivecpmnetwork.com/f9e1bab1d4584029be218ddf96214dc5/invoke.js"></script>
+      <div id="container-f9e1bab1d4584029be218ddf96214dc5"></div>
+    </div>
+  </div>
+
+  <div class="ad-slot">
+    <div class="ad-label">Advertisement</div>
+    <div class="ad-300-wrap">
+      <script>
+        atOptions = {
+          'key' : '46a560bcd1af63fd513ba89c017629d1',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script src="https://www.highperformanceformat.com/46a560bcd1af63fd513ba89c017629d1/invoke.js"></script>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="fbrand">SarkariDisha</div>
+      <p data-i18n="footerNote">SarkariDisha is an independent information portal and is not affiliated with any government body. Always verify all details and apply only through the concerned department's official website.</p>
+      <div style="display:flex;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+        <a href="sarkaridisha-terms.html" style="color:#B9B29A;" data-i18n="footerTerms">Terms</a>
+        <a href="sarkaridisha-privacy.html" style="color:#B9B29A;" data-i18n="footerPrivacy">Privacy</a>
+        <a href="sarkaridisha-disclaimer.html" style="color:#B9B29A;" data-i18n="footerDisclaimer">Disclaimer</a>
+        <a href="sarkaridisha-contact.html" style="color:#B9B29A;" data-i18n="footerContact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // ---- language / translation system ----
+  const TRANSLATIONS = {
+    en: {
+      tagline: 'GOVT JOB NOTICES · RESULTS · ADMIT CARDS',
+      heroHeadline: 'Find your next <span>government job</span>, all in one place',
+      heroSub: 'Notifications · Results · Admit Cards · Answer Keys — updated regularly',
+      searchPlaceholder: 'Search post, exam, department…',
+      searchBtn: 'Search',
+      tabAll: 'All Boards',
+      tabJobs: 'Latest Jobs',
+      tabAdmission: 'Admission',
+      tabResults: 'Results',
+      tabAdmit: 'Admit Cards',
+      tabKeys: 'Answer Keys',
+      colJobs: 'Latest Jobs',
+      colAdmission: 'Admission',
+      colResults: 'Results',
+      colAdmit: 'Admit Cards',
+      colKeys: 'Answer Keys',
+      footerNote: 'SarkariDisha is an independent information portal and is not affiliated with any government body. Always verify all details and apply only through the concerned department\'s official website.',
+      footerTerms: 'Terms',
+      footerPrivacy: 'Privacy',
+      footerDisclaimer: 'Disclaimer',
+      footerContact: 'Contact',
+      itemsWord: 'items',
+    },
+    hi: {
+      tagline: 'सरकारी नौकरी सूचनाएं · परिणाम · प्रवेश पत्र',
+      heroHeadline: 'अपनी अगली <span>सरकारी नौकरी</span> यहां खोजें',
+      heroSub: 'सूचनाएं · परिणाम · प्रवेश पत्र · उत्तर कुंजी — नियमित रूप से अपडेट',
+      searchPlaceholder: 'पद, परीक्षा, विभाग खोजें…',
+      searchBtn: 'खोजें',
+      tabAll: 'सभी सूचनाएं',
+      tabJobs: 'नवीनतम नौकरियां',
+      tabAdmission: 'प्रवेश',
+      tabResults: 'परिणाम',
+      tabAdmit: 'प्रवेश पत्र',
+      tabKeys: 'उत्तर कुंजी',
+      colJobs: 'नवीनतम नौकरियां',
+      colAdmission: 'प्रवेश',
+      colResults: 'परिणाम',
+      colAdmit: 'प्रवेश पत्र',
+      colKeys: 'उत्तर कुंजी',
+      footerNote: 'SarkariDisha एक स्वतंत्र सूचना पोर्टल है और किसी भी सरकारी निकाय से संबद्ध नहीं है। कृपया सभी विवरण सत्यापित करें और संबंधित विभाग की आधिकारिक वेबसाइट के माध्यम से ही आवेदन करें।',
+      footerTerms: 'नियम',
+      footerPrivacy: 'गोपनीयता',
+      footerDisclaimer: 'अस्वीकरण',
+      footerContact: 'संपर्क करें',
+      itemsWord: 'सूचनाएं',
+    },
+  };
+
+  let currentLang = 'en';
+
+  function t(key){
+    return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.en[key] || key;
+  }
+
+  function applyTranslations(){
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      el.innerHTML = t(key);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      el.setAttribute('placeholder', t(key));
+    });
+  }
+
+  function setLanguage(lang){
+    currentLang = lang;
+    localStorage.setItem('sarkaridisha_lang', lang);
+    document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
+    document.getElementById('langHiBtn').classList.toggle('active', lang === 'hi');
+    document.documentElement.lang = lang;
+    applyTranslations();
+    // re-render dynamic parts that use t() internally (item counts)
+    const activeTab = document.querySelector('.tab.active');
+    if(activeTab){
+      renderAll(activeTab.dataset.filter, document.getElementById('searchInput').value);
+    }
+  }
+
+  // ---- Supabase connection ----
+  // PASTE YOUR OWN VALUES HERE (Project Settings -> API in Supabase):
+  const SUPABASE_URL = 'https://xnagaojcdrcjthoazogp.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Gh-xRyHii3daT3RodbJGQw_m9ekf_p7';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- live data (loaded from Supabase) ----
+  let DATA = [];
+
+  // ---- badges ----
+  // Colors for every badge value the admin panel can set. Add a new badge in
+  // sarkaridisha-admin.html's "Badge" dropdown and give it a color here to match.
+  const TAG_COLORS = {
+    'NEW': 'red',
+    'DECLARED': 'green',
+    'COMING SOON': 'blue',
+    'CLOSING SOON': 'amber',
+    'EXTENDED': 'purple',
+    'CLOSED': 'grey',
+  };
+  function tagColorFor(tag){
+    return TAG_COLORS[tag] || 'red';
+  }
+
+  // A "NEW" badge only makes sense for a little while — after NEW_BADGE_DAYS days from when the
+  // listing was created, it automatically stops showing (no admin action needed). Other badges
+  // (DECLARED, COMING SOON, etc.) are left exactly as the admin set them, since those are manual
+  // states rather than a freshness indicator — UNLESS auto_badge is turned on for that listing
+  // and a closing_date is set, in which case the badge automatically becomes CLOSING SOON in the
+  // CLOSING_SOON_DAYS window before that date, then CLOSED once it's passed.
+  const NEW_BADGE_DAYS = 10;
+  const CLOSING_SOON_DAYS = 10;
+  // autoBadge governs two independent automatic transitions, checked in this order:
+  //  1) closingDate: switches to CLOSING SOON in the window before it, then CLOSED once passed.
+  //  2) openingDate: switches COMING SOON -> NEW once that date arrives, then behaves exactly
+  //     like a manually-set NEW badge and stops showing NEW_BADGE_DAYS days after opening.
+  // A listing can use either date, both, or neither. When autoBadge is off, or neither date
+  // applies right now, this falls through to the manually-picked tag, including the existing
+  // NEW_BADGE_DAYS auto-expiry for a manually-set NEW badge (timed from created_at instead).
+  function effectiveTag(tag, createdAt, closingDate, openingDate, autoBadge){
+    if(autoBadge && closingDate){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const closing = new Date(closingDate + 'T00:00:00');
+      const diffDays = Math.round((closing - today) / (24 * 60 * 60 * 1000));
+      if(diffDays < 0) return 'CLOSED';
+      if(diffDays <= CLOSING_SOON_DAYS) return 'CLOSING SOON';
+    }
+    if(autoBadge && openingDate){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const opening = new Date(openingDate + 'T00:00:00');
+      const daysSinceOpen = Math.round((today - opening) / (24 * 60 * 60 * 1000));
+      if(daysSinceOpen >= 0 && daysSinceOpen <= NEW_BADGE_DAYS) return 'NEW';
+    }
+    if(tag === 'NEW' && createdAt){
+      const ageMs = Date.now() - new Date(createdAt).getTime();
+      if(ageMs > NEW_BADGE_DAYS * 24 * 60 * 60 * 1000) return '';
+    }
+    return tag || '';
+  }
+
+  async function loadListings(){
+    const { data, error } = await sb
+      .from('listings')
+      .select('*')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+
+    if(error){
+      console.error('Could not load listings:', error);
+      return;
+    }
+
+    DATA = data
+      .filter(row => row.status !== 'draft') // drafts are work-in-progress and aren't shown publicly
+      .map(row => {
+      const tag = effectiveTag(row.tag || '', row.created_at, row.closing_date, row.opening_date, row.auto_badge);
+      return {
+        id: row.id,
+        cat: row.category,
+        tag,
+        tagColor: tagColorFor(tag),
+        title: row.title,
+        dept: row.dept,
+        date: row.date_text,
+        ref: row.ref,
+        total_post: row.total_post || '',
+        created_at: row.created_at,
+        description: row.description || '',
+        apply_link: row.apply_link || '',
+        notification_link: row.notification_link || '',
+        official_link: row.official_link || '',
+      };
+    });
+
+    renderAll('all', document.getElementById('searchInput').value);
+    renderTicker();
+  }
+
+  const listingsCols = document.querySelectorAll('.col');
+  const colMap = {job:null, result:null, admit:null};
+
+  const MAX_PER_COLUMN = 15;
+
+  function renderCol(colEl, catKey, items){
+    const list = colEl.querySelector('.listings');
+    const countEl = colEl.querySelector('.count');
+    const seeMoreEl = colEl.querySelector('.see-more');
+    list.innerHTML = '';
+
+    const shown = items.slice(0, MAX_PER_COLUMN);
+    shown.forEach(item=>{
+      const row = document.createElement('div');
+      row.className = 'listing';
+      // each of these only appears on the card if it was actually filled in on the listing —
+      // an empty department, total posts, date/short-text, or reference number is simply skipped
+      const metaParts = [];
+      if(item.dept) metaParts.push(`<span>${item.dept}</span>`);
+      if(item.total_post) metaParts.push(`<span>${item.total_post} Posts</span>`);
+      if(item.date) metaParts.push(`<span class="${item.cat==='result' ? 'ok' : (item.tag==='NEW' ? 'urgent':'')}">${item.date}</span>`);
+      if(item.ref) metaParts.push(`<span>${item.ref}</span>`);
+      row.innerHTML = `
+        <div class="listing-top">
+          <a class="title" href="sarkaridisha-detail.html?id=${item.id}">${item.title}</a>
+          ${item.tag ? `<span class="stamp ${item.tagColor!=='red' ? item.tagColor : ''}">${item.tag}</span>` : ''}
+        </div>
+        ${metaParts.length > 0 ? `<div class="meta">${metaParts.join('')}</div>` : ''}`;
+      list.appendChild(row);
+    });
+    countEl.textContent = items.length + ' ' + t('itemsWord');
+
+    if(seeMoreEl){
+      if(items.length > MAX_PER_COLUMN){
+        seeMoreEl.style.display = 'block';
+        seeMoreEl.querySelector('a').href = `sarkaridisha-category.html?cat=${catKey}`;
+      } else {
+        seeMoreEl.style.display = 'none';
+      }
+    }
+  }
+
+  function renderAll(filter, searchTerm){
+    const term = (searchTerm||'').toLowerCase().trim();
+    ['job','admit','result','key','admission'].forEach(colKey=>{
+      const colEl = document.querySelector(`.col[data-col="${colKey}"]`);
+      let items = DATA.filter(d => d.cat===colKey);
+      if(filter && filter !== 'all'){
+        items = items.filter(d => d.cat===filter);
+      }
+      if(term){
+        items = items.filter(d=> d.title.toLowerCase().includes(term) || d.dept.toLowerCase().includes(term));
+      }
+      renderCol(colEl, colKey, items);
+    });
+  }
+
+  // tabs
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAll(btn.dataset.filter, document.getElementById('searchInput').value);
+    });
+  });
+
+  function applySearch(){
+    const activeTab = document.querySelector('.tab.active').dataset.filter;
+    renderAll(activeTab, document.getElementById('searchInput').value);
+  }
+  document.getElementById('searchInput').addEventListener('keyup', (e)=>{
+    if(e.key === 'Enter') applySearch();
+    else applySearch();
+  });
+
+  // ticker — built from real listings, newest across all categories, each item clickable
+  function renderTicker(){
+    const inner = document.getElementById('tickerInner');
+    if(!DATA || DATA.length === 0){
+      inner.innerHTML = '';
+      return;
+    }
+    const items = DATA.slice(0, 12); // already sorted newest-first from Supabase
+    const html = items
+      .map(item => `<a href="sarkaridisha-detail.html?id=${item.id}"><span>●</span> ${item.title}</a>`)
+      .join(' &nbsp; &nbsp; ');
+    inner.innerHTML = html + ' &nbsp; &nbsp; ' + html; // duplicate for seamless loop
+  }
+
+  // date
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN', {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+
+  // restore saved language preference, then load listings
+  const savedLang = localStorage.getItem('sarkaridisha_lang') || 'en';
+  setLanguage(savedLang);
+  loadListings();
+</script>
+<a href="https://sarkaridishatools.netlify.app/" target="_blank" rel="noopener" class="tools-float-badge">
+    <span class="tools-float-icon">🛠️</span>
+    <span class="tools-float-text">
+      <span class="tools-float-label">Free Tools</span>
+      <span class="tools-float-sub">Form-filling made easy</span>
+    </span>
+  </a>
+
+<ins class="adsbygoogle adsbygoogle-noablate" data-ad-hi="true" data-adsbygoogle-status="done" style="display: none !important;"><div id="aswift_0_host" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;"><iframe id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;min-height:auto;max-height:none;min-width:auto;max-width:none;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting; run-ad-auction" src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-1651008634632225&amp;output=html&amp;adk=1812271804&amp;adf=3025194257&amp;abgtt=6&amp;lmt=1786419448&amp;plat=1%3A16777224%2C2%3A8%2C3%3A2162688%2C4%3A2162688%2C9%3A32776%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C30%3A1048576%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32%2C44%3A32&amp;format=0x0&amp;url=http%3A%2F%2Flocalhost%3A8743%2Findex.html&amp;pra=5&amp;asro=0&amp;aimartd=4&amp;aieuf=1&amp;aicrs=1&amp;uach=WyJXaW5kb3dzIiwiMTkuMC4wIiwieDg2IiwiIiwiMTMxLjAuNjc3OC4yMDQiLG51bGwsMCxudWxsLCI2NCIsW1siQ2hyb21pdW0iLCIxMzEuMC42Nzc4LjIwNCJdLFsiTm90X0EgQnJhbmQiLCIyNC4wLjAuMCJdXSwwXQ..&amp;dt=1786419448259&amp;bpp=19&amp;bdt=1744&amp;idt=528&amp;shv=r20260810&amp;mjsv=m202608060101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie_enabled=1&amp;eoidce=1&amp;nras=1&amp;correlator=2485968498581&amp;frm=20&amp;pv=2&amp;u_tz=330&amp;u_his=2&amp;u_h=864&amp;u_w=1536&amp;u_ah=864&amp;u_aw=1536&amp;u_cd=24&amp;u_sd=1&amp;dmc=8&amp;adx=-12245933&amp;ady=-12245933&amp;biw=800&amp;bih=600&amp;scr_x=0&amp;scr_y=0&amp;eid=95396139%2C95397133%2C122880127&amp;oid=2&amp;pvsid=168381443283527&amp;tmod=931982252&amp;uas=3&amp;nvt=1&amp;fsapi=1&amp;fc=1920&amp;brdim=12%2C12%2C12%2C12%2C1536%2C0%2C1313%2C996%2C800%2C600&amp;vis=1&amp;rsz=%7C%7Cs%7C&amp;abl=NS&amp;fu=32768&amp;bc=31&amp;bz=1.64&amp;ifi=1&amp;uci=a!1&amp;fsb=1&amp;dtd=642" data-google-container-id="a!1" tabindex="0" title="Advertisement" aria-label="Advertisement" data-load-complete="true"></iframe></div></ins></body><iframe id="google_esf" name="google_esf" src="https://googleads.g.doubleclick.net/pagead/html/r20260810/r20190131/zrt_lookup.html" style="display: none;"></iframe></html>

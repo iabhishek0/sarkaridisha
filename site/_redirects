@@ -1,0 +1,6 @@
+# Proxy /notices/* to the "notices" bucket in Supabase Storage, so files uploaded
+# from the admin panel open at your own site's address instead of a supabase.co URL.
+# Status 200 (no "!") means: if a real file already exists at that path in this
+# deploy (e.g. one you added manually), that file is served first — this rule only
+# kicks in when there's no matching static file, which covers admin-panel uploads.
+/notices/*  https://xnagaojcdrcjthoazogp.supabase.co/storage/v1/object/public/notices/:splat  200

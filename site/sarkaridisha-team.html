@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SarkariDisha — Manage Team</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#16233D;
+    --ink-deep:#0D1626;
+    --paper:#FAF7F0;
+    --paper-alt:#F1EADA;
+    --marigold:#B8790F;
+    --marigold-light:#E8A93D;
+    --teal:#1B6B6B;
+    --green:#256B45;
+    --red:#A6321E;
+    --line:#D8CFB8;
+    --line-strong:#B9AE8E;
+    --shadow:0 2px 8px rgba(22,35,61,.08), 0 1px 2px rgba(22,35,61,.06);
+    --shadow-lg:0 8px 24px rgba(22,35,61,.14), 0 2px 6px rgba(22,35,61,.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px;}
+
+  /* Top bar (shared identity with main site) */
+  .topbar{background:var(--ink);color:var(--paper);}
+  .topbar .wrap{
+    display:flex;align-items:center;justify-content:space-between;height:52px;
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;}
+  .topbar .stamp-mini{
+    width:28px;height:28px;border-radius:50%;border:none;
+    display:flex;align-items:center;justify-content:center;transform:none;flex-shrink:0;
+    object-fit:contain;background:#fff;
+  }
+  .topbar .stamp-mini span{font-family:'Zilla Slab',serif;font-size:7px;font-weight:700;color:#E0A83C;line-height:1;text-align:center;}
+  .topbar h1{font-family:'Zilla Slab',serif;font-size:17px;margin:0;font-weight:600;}
+  .topbar .sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#B9B29A;letter-spacing:.04em;}
+  .topbar .who{font-family:'IBM Plex Mono',monospace;font-size:12px;display:flex;align-items:center;gap:14px;}
+  .topbar button.logout{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    background:transparent;border:1px solid rgba(250,247,240,.35);color:var(--paper);
+    padding:6px 12px;cursor:pointer;
+  }
+  .role-badge{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;
+    padding:3px 9px;border-radius:999px;letter-spacing:.04em;
+  }
+  .role-badge.role-admin{background:rgba(232,169,61,.18);color:var(--marigold-light, #E8A93D);border:1px solid rgba(232,169,61,.4);}
+  .role-badge.role-editor{background:rgba(250,247,240,.1);color:#B9B29A;border:1px solid rgba(250,247,240,.25);}
+
+  /* ---------- LOGIN SCREEN ---------- */
+  #loginScreen{
+    min-height:calc(100vh - 52px);
+    display:flex;align-items:center;justify-content:center;
+    padding:40px 20px;
+  }
+  .login-card{
+    width:100%;max-width:340px;
+    border:1.5px solid var(--ink);background:var(--paper-alt);
+    padding:32px 28px 28px;
+  }
+  .login-card .stamp-logo{
+    width:52px;height:52px;border-radius:50%;border:none;
+    display:flex;align-items:center;justify-content:center;transform:none;
+    margin:0 auto 14px;object-fit:contain;background:#fff;
+  }
+  .login-card .stamp-logo span{font-family:'Zilla Slab',serif;font-weight:700;color:var(--red);font-size:9px;text-align:center;line-height:1.05;}
+  .login-card h2{
+    font-family:'Zilla Slab',serif;font-size:20px;text-align:center;margin:0 0 4px;
+  }
+  .login-card p.hint{
+    text-align:center;font-size:11.5px;color:#453A24;margin:0 0 22px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;font-size:11.5px;font-family:'IBM Plex Mono',monospace;
+    color:#33291A;margin-bottom:5px;letter-spacing:.03em;
+  }
+  .field input{
+    width:100%;padding:9px 10px;border:1.5px solid var(--line-strong);
+    background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;
+    outline:none;
+  }
+  .field input:focus{border-color:var(--ink);}
+  .btn-primary{
+    width:100%;padding:11px;border:none;background:var(--ink);color:var(--paper);
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.04em;
+    cursor:pointer;margin-top:6px;
+  }
+  .btn-primary:hover{background:#223252;}
+  .login-error{
+    background:#F7E3DE;border:1px solid var(--red);color:var(--red);
+    font-size:12px;padding:8px 10px;margin-bottom:14px;display:none;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .demo-creds{
+    margin-top:18px;padding-top:14px;border-top:1px dashed var(--line-strong);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:#453A24;text-align:center;
+  }
+  .demo-creds b{color:var(--ink);}
+
+  /* ---------- DASHBOARD ---------- */
+  #dashboard{display:none;padding:28px 0 60px;}
+  .dash-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+  .dash-head h2{font-family:'Zilla Slab',serif;font-size:24px;margin:0;}
+  .dash-head p{margin:2px 0 0;font-size:12px;color:#453A24;font-family:'IBM Plex Mono',monospace;}
+
+  .toast{
+    display:none;
+    background:#E3EFE8;border:1px solid var(--green);color:var(--green);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    padding:9px 12px;margin-bottom:16px;
+  }
+
+  .panel-grid{display:flex;flex-direction:column;gap:26px;}
+  @media (max-width:820px){.panel-grid{grid-template-columns:1fr;}}
+  .field-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media (max-width:700px){.field-grid2,.field-grid3{grid-template-columns:1fr;}}
+  .section-label{
+    font-family:'Zilla Slab',serif;font-size:14.5px;font-weight:600;
+    margin:22px 0 10px;padding-top:16px;border-top:1px solid var(--line);
+    color:var(--marigold);
+  }
+  .section-label:first-child{margin-top:0;padding-top:0;border-top:none;}
+  .vacancy-row-block{
+    border:1px solid var(--line-strong);padding:12px 14px;margin-bottom:12px;background:var(--paper);
+  }
+  .vacancy-group-top{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+  .vacancy-group-top input{
+    flex:1;padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+  .elig-mode-toggle{display:flex;gap:6px;margin-bottom:10px;}
+  .elig-mode-toggle button{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    background:var(--paper);border:1.5px solid var(--line-strong);color:#6B6248;
+    padding:5px 11px;cursor:pointer;
+  }
+  .elig-mode-toggle button.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .shared-elig-box{
+    border:1px dashed var(--teal);padding:10px;margin-bottom:12px;background:rgba(27,107,107,.04);
+  }
+  .shared-elig-box .elig-hint{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--teal);margin-bottom:6px;}
+  .post-sub-block{
+    border:1px solid var(--line);padding:10px 12px;margin-bottom:10px;background:var(--paper-alt);
+  }
+  .post-copy-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    background:transparent;border:1px dashed var(--line-strong);color:#6B6248;
+    padding:3px 8px;cursor:pointer;margin-bottom:8px;
+  }
+  .post-copy-btn:hover{border-color:var(--marigold);color:var(--marigold);}
+  .vacancy-top-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:10px;}
+  @media (max-width:700px){.vacancy-top-row{grid-template-columns:1fr;}}
+  .vacancy-top-row input{padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);font-family:'IBM Plex Sans',sans-serif;font-size:13px;}
+  .remove-row-btn{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 10px;cursor:pointer;white-space:nowrap;
+  }
+  .elig-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
+  .elig-line{display:flex;gap:6px;align-items:flex-start;}
+  .elig-line textarea{
+    flex:1;padding:7px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;resize:none;overflow:hidden;
+    min-height:32px;line-height:1.5;
+  }
+  .elig-remove{
+    background:transparent;border:1px solid var(--line-strong);color:#453A24;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;cursor:pointer;
+  }
+  .add-elig-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--marigold);color:var(--marigold);
+    padding:6px 10px;cursor:pointer;margin-top:2px;
+  }
+  .link-row{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;margin-bottom:8px;}
+  @media (max-width:700px){.link-row{grid-template-columns:1fr;}}
+  .link-row input{
+    padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+  .link-remove{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 10px;cursor:pointer;
+  }
+  .format-hint{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;
+    margin:4px 0 10px;line-height:1.6;
+  }
+  .section-title-input{
+    width:100%;padding:7px 9px;margin-bottom:8px;
+    border:1.5px dashed var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#453A24;
+  }
+  .section-title-input:focus{outline:none;border-color:var(--marigold);border-style:solid;}
+  .section-title-input::placeholder{color:#8a8062;}
+
+  /* ---- flexible table builder (inside Custom Sections) ---- */
+  .custom-type-toggle{display:flex;gap:6px;margin-bottom:10px;}
+  .custom-type-toggle button{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    background:var(--paper);border:1.5px solid var(--line-strong);color:#6B6248;
+    padding:5px 11px;cursor:pointer;
+  }
+  .custom-type-toggle button.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .tbl-columns-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center;}
+  .tbl-col-chip{display:flex;align-items:center;gap:4px;background:var(--paper-alt);border:1px solid var(--line-strong);padding:3px 3px 3px 8px;}
+  .tbl-col-chip input{
+    border:none;background:transparent;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;
+    width:110px;outline:none;color:var(--ink);
+  }
+  .tbl-col-chip button{
+    background:transparent;border:none;color:var(--red);cursor:pointer;font-size:12px;padding:2px 6px;
+  }
+  .tbl-add-col-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--teal);color:var(--teal);
+    padding:4px 9px;cursor:pointer;
+  }
+  .tbl-wrap{overflow-x:auto;margin-bottom:10px;border:1px solid var(--line-strong);}
+  .tbl-grid{border-collapse:collapse;width:100%;}
+  .tbl-grid th{
+    background:var(--paper-alt);font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.03em;color:#453A24;padding:6px 8px;text-align:left;
+    border:1px solid var(--line-strong);white-space:nowrap;
+  }
+  .tbl-grid td{border:1px solid var(--line);padding:4px;vertical-align:top;min-width:130px;}
+  .tbl-cell-text{
+    width:100%;border:1px solid transparent;background:transparent;padding:5px 6px;
+    font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;outline:none;
+  }
+  .tbl-cell-text:focus{border-color:var(--line-strong);background:var(--paper);}
+  .tbl-cell-url{
+    width:100%;border:1px solid var(--teal);background:var(--paper);padding:4px 6px;margin-top:3px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;outline:none;color:var(--teal);
+  }
+  .tbl-cell-opts{display:flex;gap:8px;padding:2px 6px 4px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8a8062;flex-wrap:wrap;}
+  .tbl-cell-opts label{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;}
+  .tbl-cell-merged{
+    padding:10px 8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;font-style:italic;
+    background:repeating-linear-gradient(135deg, var(--paper-alt), var(--paper-alt) 6px, var(--paper) 6px, var(--paper) 12px);
+  }
+  .tbl-row-remove-cell{width:1%;white-space:nowrap;text-align:center;border:none;background:transparent;}
+  .tbl-row-remove-cell button{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 8px;cursor:pointer;
+  }
+  .tbl-add-row-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--marigold);color:var(--marigold);
+    padding:5px 10px;cursor:pointer;margin-top:2px;
+  }
+  .link-row-wrap{margin-bottom:10px;}
+  .link-row-wrap .link-row{margin-bottom:4px;}
+  .link-upload-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .link-blink-toggle{
+    display:flex;align-items:center;gap:6px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B6248;cursor:pointer;
+    margin-left:auto;
+  }
+  .link-blink-toggle input{cursor:pointer;}
+  .upload-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--teal);color:var(--teal);
+    padding:5px 10px;cursor:pointer;display:inline-block;
+  }
+  .upload-btn:hover{background:rgba(27,107,107,.08);}
+  .upload-status{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;}
+  .upload-status.err{color:var(--red);}
+  .upload-status.ok{color:var(--green);}
+  .region-block{
+    border:1px solid var(--line-strong);padding:12px 14px;margin-bottom:12px;background:var(--paper);
+  }
+  .region-top-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;}
+  .region-top-row input{
+    padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+  .region-remove-block{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 10px;cursor:pointer;white-space:nowrap;
+  }
+  .region-date-line{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px;}
+  @media (max-width:700px){.region-date-line{grid-template-columns:1fr;}}
+  .region-date-line input{
+    padding:7px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;
+  }
+  .region-date-remove{
+    background:transparent;border:1px solid var(--line-strong);color:#453A24;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;cursor:pointer;
+  }
+  .add-row-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    background:transparent;border:1px solid var(--ink);color:var(--ink);
+    padding:7px 12px;cursor:pointer;margin-top:4px;
+  }
+
+  .custom-section-block{
+    border:1px solid var(--line-strong);padding:12px 14px;margin-bottom:12px;background:var(--paper);
+  }
+  .move-section-btn{
+    background:transparent;border:1px solid var(--line-strong);color:#453A24;
+    font-family:'IBM Plex Mono',monospace;font-size:13px;padding:0 10px;cursor:pointer;white-space:nowrap;
+  }
+  .move-section-btn:disabled{opacity:.3;cursor:default;}
+  .custom-section-top{display:flex;gap:8px;margin-bottom:10px;}
+  .custom-section-top input{
+    flex:1;padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+
+  .order-row{
+    display:flex;align-items:center;gap:10px;
+    border:1px solid var(--line-strong);background:var(--paper);
+    padding:8px 12px;margin-bottom:6px;
+  }
+  .order-row .order-label{flex:1;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;}
+  .order-row .order-btns{display:flex;gap:4px;}
+  .order-row .order-btns button{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    background:transparent;border:1px solid var(--line-strong);color:var(--ink);
+    padding:3px 9px;cursor:pointer;
+  }
+  .order-row .order-btns button:disabled{opacity:.3;cursor:default;}
+  .order-row .order-btns button:not(:disabled):hover{border-color:var(--marigold);color:var(--marigold);}
+
+  .panel{border:1px solid var(--line-strong);background:var(--paper-alt);}
+  .panel-title{
+    font-family:'Zilla Slab',serif;font-size:16px;font-weight:600;
+    padding:12px 16px;border-bottom:1px solid var(--line-strong);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .panel-title .mode-badge{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 7px;
+    border-radius:999px;border:1px solid var(--marigold);color:var(--marigold);
+  }
+  .panel-body{padding:16px;}
+
+  .field select{
+    width:100%;padding:9px 10px;border:1.5px solid var(--line-strong);
+    background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;
+  }
+  .field-row{display:flex;gap:10px;}
+  .field-row .field{flex:1;}
+
+  .btn-row{display:flex;gap:8px;margin-top:4px;}
+  .btn-secondary{
+    flex:1;padding:10px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;
+  }
+  .btn-add{flex:2;}
+
+  table{width:100%;border-collapse:collapse;}
+  thead th{
+    text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    color:#453A24;text-transform:uppercase;letter-spacing:.04em;font-weight:700;
+    border-bottom:2px solid var(--ink);padding:8px 10px;
+  }
+  tbody td{
+    padding:10px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;
+  }
+  tbody tr:hover{background:#F6F0DF;}
+  .row-title{font-weight:700;}
+  .row-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#453A24;margin-top:3px;font-weight:500;}
+  .badge{
+    font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;
+    border:1.5px solid var(--red);color:var(--red);border-radius:999px;padding:2px 7px;
+    display:inline-block;
+  }
+  .badge.green{border-color:var(--green);color:var(--green);}
+  .badge.blue{border-color:var(--teal);color:var(--teal);}
+  .badge.amber{border-color:var(--marigold);color:var(--marigold);}
+  .badge.purple{border-color:#6B4FA0;color:#6B4FA0;}
+  .cat-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    padding:2px 8px;border:1px solid var(--line-strong);display:inline-block;
+  }
+  .row-actions{display:flex;gap:6px;white-space:nowrap;}
+  .row-actions button{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    border:1px solid var(--line-strong);background:var(--paper);
+    padding:5px 9px;cursor:pointer;
+  }
+  .row-actions button.edit:hover{border-color:var(--marigold);color:var(--marigold);}
+  .row-actions button.copy:hover{border-color:var(--teal, #1B6B6B);color:var(--teal, #1B6B6B);}
+  .row-actions button.del:hover{border-color:var(--red);color:var(--red);}
+  .perm-note{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;font-style:italic;
+  }
+
+  .empty-note{
+    text-align:center;padding:30px 10px;color:#453A24;font-size:12.5px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  .disclaimer-strip{
+    margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#544928;
+    border-top:1px dashed var(--line-strong);padding-top:12px;
+  }
+</style>
+
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <img src="sarkaridisha-logo.png" alt="SarkariDisha" class="stamp-mini">
+        <div>
+          <h1>SarkariDisha</h1>
+          <div class="sub">MANAGE TEAM</div>
+        </div>
+      </div>
+      <div class="who" id="whoBar" style="display:none;">
+        <span>Signed in as <b id="whoName">—</b></span>
+        <span id="roleBadge" class="role-badge">—</span>
+        <a href="sarkaridisha-admin.html" class="logout" style="text-decoration:none;">← Back to Listings</a>
+        <button class="logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LOGIN ================= -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <img src="sarkaridisha-logo.png" alt="SarkariDisha" class="stamp-logo">
+      <h2>Admin Login</h2>
+      <p class="hint">AUTHORIZED PERSONNEL ONLY</p>
+      <div class="login-error" id="loginError">Invalid username or password.</div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="userInput" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="passInput" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="tryLogin()">Log In</button>
+      <div class="demo-creds">Use the email/password you created in Supabase → Authentication → Users</div>
+    </div>
+  </div>
+
+  <!-- ================= NOT AN ADMIN ================= -->
+  <div id="notAdminScreen" style="display:none;">
+    <div class="wrap" style="padding-top:60px;text-align:center;">
+      <h2>Admins Only</h2>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#544928;">
+        This page is only available to Admin accounts. If you believe this is a mistake, ask an existing admin to check your role.
+      </p>
+      <a href="sarkaridisha-admin.html" class="logout" style="display:inline-block;margin-top:14px;text-decoration:none;padding:8px 16px;border:1px solid var(--line-strong);color:var(--ink);">← Back to Listings</a>
+    </div>
+  </div>
+
+  <!-- ================= TEAM DASHBOARD (admin only) ================= -->
+  <div id="teamDashboard" style="display:none;">
+    <div class="wrap">
+      <div class="dash-head">
+        <div>
+          <h2>Manage Team</h2>
+          <p>Create logins, set Admin/Editor roles, and ban or remove team members.</p>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+
+      <div class="panel" id="teamPanel">
+        <div class="panel-title">
+          <span>Manage Team</span>
+          <span class="mode-badge" id="teamCountBadge">— people</span>
+        </div>
+        <div class="panel-body">
+          <div class="format-hint">
+            This only manages who can be an <b>Admin</b> vs an <b>Editor</b> once someone already has a login — it can't create their login itself (Supabase doesn't allow that safely from this page). To bring on someone brand new: first go to your Supabase dashboard → <b>Authentication → Users → Add User</b> and create their email/password there, then come back here and add them below with that same email and their <b>User UID</b> (shown next to their name in that same Users list).
+          </div>
+          <div id="teamTableWrap"></div>
+
+          <div class="section-label" style="margin-top:18px;">Create a Brand-New Login</div>
+          <div class="format-hint">This creates their actual login AND adds them to the team list in one step — no more going to Supabase for this part.</div>
+          <div class="field-grid2">
+            <div class="field">
+              <label>Their Email</label>
+              <input type="text" id="new_login_email" placeholder="name@example.com">
+            </div>
+            <div class="field">
+              <label>Temporary Password (they can change it later)</label>
+              <input type="text" id="new_login_password" placeholder="e.g. a strong temp password">
+            </div>
+          </div>
+          <div class="field">
+            <label>Role</label>
+            <select id="new_login_role">
+              <option value="editor">Editor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button class="btn-secondary btn-add" onclick="createNewLogin()" id="createLoginBtn">+ Create Login &amp; Add to Team</button>
+          </div>
+
+          <div class="section-label" style="margin-top:22px;">Already Has a Login? Add Them Manually</div>
+          <div class="format-hint">
+            Use this only if their login already exists (e.g. it was made before this feature existed). Find their <b>User UID</b> under Supabase → <b>Authentication → Users</b>.
+          </div>
+          <div class="field-grid2">
+            <div class="field">
+              <label>Email (must match their Supabase Auth login)</label>
+              <input type="text" id="team_email" placeholder="name@example.com">
+            </div>
+            <div class="field">
+              <label>Role</label>
+              <select id="team_role">
+                <option value="editor">Editor</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>User UID (from Supabase → Authentication → Users)</label>
+            <input type="text" id="team_user_id" placeholder="e.g. a1b2c3d4-5678-90ab-cdef-1234567890ab">
+          </div>
+          <div class="btn-row">
+            <button class="btn-secondary btn-add" onclick="addTeamMember()">+ Add / Update Team Member</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer-strip">
+        Changes here take effect immediately on the real Supabase database. <b>Remove from Team</b> only takes away Admin/Editor access (their login still works). <b>Ban</b> blocks their login entirely and is reversible with Unban. <b>Delete Login</b> is permanent and cannot be undone.
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---- Supabase connection (same project as the main admin panel) ----
+  const SUPABASE_URL = 'https://xnagaojcdrcjthoazogp.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Gh-xRyHii3daT3RodbJGQw_m9ekf_p7';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- calls the manage-user Edge Function (see manage-user-edge-function.ts) ----
+  const EDGE_FUNCTION_URL = SUPABASE_URL + '/functions/v1/manage-user';
+  async function callManageUser(payload){
+    const { data: sessionData } = await sb.auth.getSession();
+    const token = sessionData?.session?.access_token;
+    if(!token){
+      return { error: 'Not logged in.' };
+    }
+    try{
+      const res = await fetch(EDGE_FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify(payload),
+      });
+      return await res.json();
+    }catch(e){
+      return { error: 'Could not reach the server function. Has it been deployed yet? (' + e.message + ')' };
+    }
+  }
+
+  let currentUserId = null;
+  let currentUserRole = 'editor'; // safe default until confirmed
+
+  async function fetchUserRole(){
+    const { data: userData } = await sb.auth.getUser();
+    currentUserId = userData?.user?.id || null;
+
+    if(!currentUserId){
+      currentUserRole = 'editor';
+      return;
+    }
+
+    const { data, error } = await sb
+      .from('admin_roles')
+      .select('role')
+      .eq('user_id', currentUserId)
+      .maybeSingle();
+
+    currentUserRole = (!error && data && data.role === 'admin') ? 'admin' : 'editor';
+
+    const roleBadge = document.getElementById('roleBadge');
+    if(roleBadge){
+      roleBadge.textContent = currentUserRole === 'admin' ? 'ADMIN' : 'EDITOR';
+      roleBadge.classList.toggle('role-admin', currentUserRole === 'admin');
+      roleBadge.classList.toggle('role-editor', currentUserRole === 'editor');
+    }
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(()=>{ t.style.display='none'; }, 2400);
+  }
+
+  // ---- shows the right screen after we know who's logged in and what their role is ----
+  function showPostLoginScreen(email){
+    document.getElementById('loginScreen').style.display = 'none';
+    if(currentUserRole !== 'admin'){
+      document.getElementById('notAdminScreen').style.display = 'block';
+      document.getElementById('teamDashboard').style.display = 'none';
+      document.getElementById('whoBar').style.display = 'none';
+      return;
+    }
+    document.getElementById('notAdminScreen').style.display = 'none';
+    document.getElementById('teamDashboard').style.display = 'block';
+    document.getElementById('whoBar').style.display = 'flex';
+    document.getElementById('whoName').textContent = email;
+    loadTeam();
+  }
+
+  async function tryLogin(){
+    const email = document.getElementById('userInput').value.trim();
+    const password = document.getElementById('passInput').value.trim();
+    const err = document.getElementById('loginError');
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    if(error){
+      err.textContent = error.message;
+      err.style.display = 'block';
+      return;
+    }
+
+    err.style.display = 'none';
+    await fetchUserRole();
+    showPostLoginScreen(data.user.email);
+  }
+
+  async function logout(){
+    await sb.auth.signOut();
+    document.getElementById('teamDashboard').style.display = 'none';
+    document.getElementById('notAdminScreen').style.display = 'none';
+    document.getElementById('whoBar').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('userInput').value = '';
+    document.getElementById('passInput').value = '';
+  }
+  document.getElementById('passInput').addEventListener('keyup', e=>{ if(e.key==='Enter') tryLogin(); });
+
+  // ---- stay logged in across refresh, if a session already exists ----
+  (async () => {
+    const { data } = await sb.auth.getSession();
+    if(data.session){
+      await fetchUserRole();
+      showPostLoginScreen(data.session.user.email);
+    }
+  })();
+
+  // ---- Manage Team ----
+  let TEAM_ROWS = [];
+
+  async function loadTeam(){
+    const { data, error } = await sb.from('admin_roles').select('user_id, email, role');
+    if(error){
+      document.getElementById('teamTableWrap').innerHTML = `<div class="format-hint">Could not load team list: ${error.message}</div>`;
+      return;
+    }
+    TEAM_ROWS = data || [];
+    renderTeamPanel();
+  }
+
+  function renderTeamPanel(){
+    document.getElementById('teamCountBadge').textContent = TEAM_ROWS.length + ' people';
+    const wrap = document.getElementById('teamTableWrap');
+    if(TEAM_ROWS.length === 0){
+      wrap.innerHTML = '<div class="format-hint">No team members listed yet — add one below.</div>';
+      return;
+    }
+    const rowsHtml = TEAM_ROWS.map(row => `
+      <tr>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${row.email || '(no email set)'}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;">${row.user_id}</td>
+        <td>
+          <select onchange="updateTeamRole('${row.user_id}', this.value)" style="padding:5px 8px;border:1.5px solid var(--line-strong);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;">
+            <option value="editor" ${row.role !== 'admin' ? 'selected' : ''}>Editor</option>
+            <option value="admin" ${row.role === 'admin' ? 'selected' : ''}>Admin</option>
+          </select>
+        </td>
+        <td>
+          ${row.user_id === currentUserId
+            ? `<span class="perm-note">This is you</span>`
+            : `<div class="row-actions" style="flex-wrap:wrap;">
+                 <button class="edit" onclick="unbanLogin('${row.user_id}', '${(row.email || '').replace(/'/g,"\\'")}')">Unban</button>
+                 <button class="edit" onclick="banLogin('${row.user_id}', '${(row.email || '').replace(/'/g,"\\'")}')">Ban</button>
+                 <button class="del" onclick="removeTeamMember('${row.user_id}', '${(row.email || '').replace(/'/g,"\\'")}')">Remove from Team</button>
+                 <button class="del" onclick="deleteLogin('${row.user_id}', '${(row.email || '').replace(/'/g,"\\'")}')">Delete Login</button>
+               </div>`}
+        </td>
+      </tr>`).join('');
+
+    wrap.innerHTML = `
+      <table>
+        <thead><tr><th>Email</th><th>User UID</th><th>Role</th><th></th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+      <div class="format-hint" style="margin-top:8px;">
+        <b>Remove from Team</b> only takes away their Admin/Editor access here (their login still works, just with no role).
+        <b>Ban</b> blocks their login entirely without deleting anything — reversible with Unban.
+        <b>Delete Login</b> is permanent and can't be undone.
+      </div>`;
+  }
+
+  async function addTeamMember(){
+    const email = document.getElementById('team_email').value.trim();
+    const role = document.getElementById('team_role').value;
+    const user_id = document.getElementById('team_user_id').value.trim();
+
+    if(!email || !user_id){
+      showToast('Please fill in both the email and the User UID.');
+      return;
+    }
+
+    const { error } = await sb.from('admin_roles').upsert({ user_id, email, role }, { onConflict: 'user_id' });
+    if(error){
+      showToast('Could not save team member: ' + error.message);
+      return;
+    }
+    showToast('Team member saved.');
+    document.getElementById('team_email').value = '';
+    document.getElementById('team_user_id').value = '';
+    document.getElementById('team_role').value = 'editor';
+    await loadTeam();
+  }
+
+  async function updateTeamRole(user_id, role){
+    const { error } = await sb.from('admin_roles').update({ role }).eq('user_id', user_id);
+    if(error){
+      showToast('Could not update role: ' + error.message);
+      await loadTeam();
+      return;
+    }
+    showToast('Role updated.');
+    await loadTeam();
+  }
+
+  async function removeTeamMember(user_id, email){
+    if(!confirm(`Remove ${email || 'this person'} from the team list?\n\nThis only removes their Admin/Editor access here — it does NOT delete their login. To fully block them from logging in at all, use Ban or Delete Login instead.`)) return;
+
+    const { error } = await sb.from('admin_roles').delete().eq('user_id', user_id);
+    if(error){
+      showToast('Could not remove team member: ' + error.message);
+      return;
+    }
+    showToast('Removed from team list.');
+    await loadTeam();
+  }
+
+  async function createNewLogin(){
+    const email = document.getElementById('new_login_email').value.trim();
+    const password = document.getElementById('new_login_password').value;
+    const role = document.getElementById('new_login_role').value;
+
+    if(!email || !password){
+      showToast('Please fill in both email and a temporary password.');
+      return;
+    }
+    if(password.length < 6){
+      showToast('Password needs to be at least 6 characters.');
+      return;
+    }
+
+    const btn = document.getElementById('createLoginBtn');
+    btn.disabled = true;
+    btn.textContent = 'Creating…';
+
+    const result = await callManageUser({ action: 'create', email, password, role });
+
+    btn.disabled = false;
+    btn.textContent = '+ Create Login & Add to Team';
+
+    if(result.error){
+      showToast('Could not create login: ' + result.error);
+      return;
+    }
+
+    showToast(email + ' can now log in — share the password with them directly.');
+    document.getElementById('new_login_email').value = '';
+    document.getElementById('new_login_password').value = '';
+    document.getElementById('new_login_role').value = 'editor';
+    await loadTeam();
+  }
+
+  async function banLogin(user_id, email){
+    if(!confirm(`Block ${email || 'this person'} from logging in at all? They'll stay on the team list, but their login itself will be blocked until you unban them.`)) return;
+    const result = await callManageUser({ action: 'ban', target_user_id: user_id });
+    if(result.error){ showToast('Could not ban: ' + result.error); return; }
+    showToast((email || 'They') + ' can no longer log in.');
+    await loadTeam();
+  }
+
+  async function unbanLogin(user_id, email){
+    const result = await callManageUser({ action: 'unban', target_user_id: user_id });
+    if(result.error){ showToast('Could not unban: ' + result.error); return; }
+    showToast((email || 'They') + ' can log in again.');
+    await loadTeam();
+  }
+
+  async function deleteLogin(user_id, email){
+    if(!confirm(`PERMANENTLY delete ${email || 'this person'}'s login? They will no longer be able to log in at all, ever — this cannot be undone. (If you just want to pause their access instead, use Ban.)`)) return;
+    const result = await callManageUser({ action: 'delete', target_user_id: user_id });
+    if(result.error){ showToast('Could not delete login: ' + result.error); return; }
+    showToast((email || 'Their') + ' login has been permanently deleted.');
+    await loadTeam();
+  }
+</script>
+</body>
+</html>

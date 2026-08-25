@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /sarkaridisha-admin.html
+Disallow: /sarkaridisha-team.html
+
+Sitemap: https://sarkaridisha.netlify.app/sitemap.xml

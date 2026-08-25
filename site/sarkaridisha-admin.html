@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SarkariDisha — Admin Panel</title>
+<!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#16233D;
+    --ink-deep:#0D1626;
+    --paper:#FAF7F0;
+    --paper-alt:#F1EADA;
+    --marigold:#B8790F;
+    --marigold-light:#E8A93D;
+    --teal:#1B6B6B;
+    --green:#256B45;
+    --red:#A6321E;
+    --line:#D8CFB8;
+    --line-strong:#B9AE8E;
+    --shadow:0 2px 8px rgba(22,35,61,.08), 0 1px 2px rgba(22,35,61,.06);
+    --shadow-lg:0 8px 24px rgba(22,35,61,.14), 0 2px 6px rgba(22,35,61,.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px;}
+
+  /* Top bar (shared identity with main site) */
+  .topbar{background:var(--ink);color:var(--paper);}
+  .topbar .wrap{
+    display:flex;align-items:center;justify-content:space-between;height:52px;
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;}
+  .topbar .stamp-mini{
+    width:28px;height:28px;border-radius:50%;border:none;
+    display:flex;align-items:center;justify-content:center;transform:none;flex-shrink:0;
+    object-fit:contain;background:#fff;
+  }
+  .topbar .stamp-mini span{font-family:'Zilla Slab',serif;font-size:7px;font-weight:700;color:#E0A83C;line-height:1;text-align:center;}
+  .topbar h1{font-family:'Zilla Slab',serif;font-size:17px;margin:0;font-weight:600;}
+  .topbar .sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#B9B29A;letter-spacing:.04em;}
+  .topbar .who{font-family:'IBM Plex Mono',monospace;font-size:12px;display:flex;align-items:center;gap:14px;}
+  .topbar button.logout{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    background:transparent;border:1px solid rgba(250,247,240,.35);color:var(--paper);
+    padding:6px 12px;cursor:pointer;
+  }
+  .role-badge{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;
+    padding:3px 9px;border-radius:999px;letter-spacing:.04em;
+  }
+  .role-badge.role-admin{background:rgba(232,169,61,.18);color:var(--marigold-light, #E8A93D);border:1px solid rgba(232,169,61,.4);}
+  .role-badge.role-editor{background:rgba(250,247,240,.1);color:#B9B29A;border:1px solid rgba(250,247,240,.25);}
+
+  /* ---------- LOGIN SCREEN ---------- */
+  #loginScreen{
+    min-height:calc(100vh - 52px);
+    display:flex;align-items:center;justify-content:center;
+    padding:40px 20px;
+  }
+  .login-card{
+    width:100%;max-width:340px;
+    border:1.5px solid var(--ink);background:var(--paper-alt);
+    padding:32px 28px 28px;
+  }
+  .login-card .stamp-logo{
+    width:52px;height:52px;border-radius:50%;border:none;
+    display:flex;align-items:center;justify-content:center;transform:none;
+    margin:0 auto 14px;object-fit:contain;background:#fff;
+  }
+  .login-card .stamp-logo span{font-family:'Zilla Slab',serif;font-weight:700;color:var(--red);font-size:9px;text-align:center;line-height:1.05;}
+  .login-card h2{
+    font-family:'Zilla Slab',serif;font-size:20px;text-align:center;margin:0 0 4px;
+  }
+  .login-card p.hint{
+    text-align:center;font-size:11.5px;color:#453A24;margin:0 0 22px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;font-size:11.5px;font-family:'IBM Plex Mono',monospace;
+    color:#33291A;margin-bottom:5px;letter-spacing:.03em;
+  }
+  .field input{
+    width:100%;padding:9px 10px;border:1.5px solid var(--line-strong);
+    background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;
+    outline:none;
+  }
+  .field input:focus{border-color:var(--ink);}
+  .field.has-error input,
+  .field.has-error select,
+  .field.has-error textarea{border-color:var(--red);}
+  .field-error-msg{
+    display:none;color:var(--red);font-size:11px;
+    font-family:'IBM Plex Mono',monospace;margin-top:5px;letter-spacing:.02em;
+  }
+  .field.has-error .field-error-msg{display:block;}
+  .btn-primary{
+    width:100%;padding:11px;border:none;background:var(--ink);color:var(--paper);
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.04em;
+    cursor:pointer;margin-top:6px;
+  }
+  .btn-primary:hover{background:#223252;}
+  .login-error{
+    background:#F7E3DE;border:1px solid var(--red);color:var(--red);
+    font-size:12px;padding:8px 10px;margin-bottom:14px;display:none;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .demo-creds{
+    margin-top:18px;padding-top:14px;border-top:1px dashed var(--line-strong);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:#453A24;text-align:center;
+  }
+  .demo-creds b{color:var(--ink);}
+
+  /* ---------- DASHBOARD ---------- */
+  #dashboard{display:none;padding:28px 0 60px;}
+  .dash-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+  .dash-head h2{font-family:'Zilla Slab',serif;font-size:24px;margin:0;}
+  .dash-head p{margin:2px 0 0;font-size:12px;color:#453A24;font-family:'IBM Plex Mono',monospace;}
+
+  .toast{
+    display:none;
+    background:#E3EFE8;border:1px solid var(--green);color:var(--green);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    padding:9px 12px;margin-bottom:16px;
+  }
+
+  .autosave-banner{
+    display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    background:#FDF3E3;border:1px solid var(--marigold-light, #C9922B);color:#5A4318;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.5;
+    padding:11px 14px;margin-bottom:16px;
+  }
+  .autosave-banner-actions{display:flex;gap:8px;flex-shrink:0;}
+  .autosave-banner-actions button{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.03em;
+    padding:6px 12px;border:1.5px solid #5A4318;background:transparent;color:#5A4318;cursor:pointer;
+  }
+  .autosave-banner-actions button:hover{background:#5A4318;color:#FDF3E3;}
+  .autosave-banner-actions button.discard{border-color:#8a7550;color:#8a7550;}
+  .autosave-banner-actions button.discard:hover{background:#8a7550;color:#FDF3E3;}
+
+  .panel-grid{display:flex;flex-direction:column;gap:26px;}
+  @media (max-width:820px){.panel-grid{grid-template-columns:1fr;}}
+  .field-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media (max-width:700px){.field-grid2,.field-grid3{grid-template-columns:1fr;}}
+  .section-label{
+    font-family:'Zilla Slab',serif;font-size:14.5px;font-weight:600;
+    margin:22px 0 10px;padding-top:16px;border-top:1px solid var(--line);
+    color:var(--marigold);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    cursor:pointer;user-select:none;
+  }
+  .section-label:first-child{margin-top:0;padding-top:0;border-top:none;}
+  .section-toggle-arrow{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8a8062;
+    flex-shrink:0;
+  }
+  .section-label.section-label-static{cursor:default;}
+  .section-body.collapsed{display:none;}
+  .vacancy-row-block{
+    border:1px solid var(--line-strong);padding:12px 14px;margin-bottom:12px;background:var(--paper);
+  }
+  .vacancy-group-top{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+  .vacancy-group-top input{
+    flex:1;padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+  .elig-mode-toggle{display:flex;gap:6px;margin-bottom:10px;}
+  .elig-mode-toggle button{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    background:var(--paper);border:1.5px solid var(--line-strong);color:#6B6248;
+    padding:5px 11px;cursor:pointer;
+  }
+  .elig-mode-toggle button.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .shared-elig-box{
+    border:1px dashed var(--teal);padding:10px;margin-bottom:12px;background:rgba(27,107,107,.04);
+  }
+  .shared-elig-box .elig-hint{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--teal);margin-bottom:6px;}
+  .post-sub-block{
+    border:1px solid var(--line);padding:10px 12px;margin-bottom:10px;background:var(--paper-alt);
+  }
+  .post-copy-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    background:transparent;border:1px dashed var(--line-strong);color:#6B6248;
+    padding:3px 8px;cursor:pointer;margin-bottom:8px;
+  }
+  .post-copy-btn:hover{border-color:var(--marigold);color:var(--marigold);}
+  .vacancy-top-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:10px;}
+  @media (max-width:700px){.vacancy-top-row{grid-template-columns:1fr;}}
+  .vacancy-top-row input{padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);font-family:'IBM Plex Sans',sans-serif;font-size:13px;}
+  .remove-row-btn{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 10px;cursor:pointer;white-space:nowrap;
+  }
+  .elig-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
+  .elig-line{display:flex;gap:6px;align-items:flex-start;}
+  .elig-line textarea{
+    flex:1;padding:7px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;resize:none;overflow:hidden;
+    min-height:32px;line-height:1.5;
+  }
+  .elig-remove{
+    background:transparent;border:1px solid var(--line-strong);color:#453A24;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;cursor:pointer;
+  }
+  .add-elig-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--marigold);color:var(--marigold);
+    padding:6px 10px;cursor:pointer;margin-top:2px;
+  }
+  .link-row{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;margin-bottom:8px;}
+  @media (max-width:700px){.link-row{grid-template-columns:1fr;}}
+  .link-row input{
+    padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+  .link-remove{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 10px;cursor:pointer;
+  }
+  .link-row-btns{display:flex;gap:4px;}
+  .link-move-btn{
+    background:transparent;border:1px solid var(--line-strong);color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 9px;cursor:pointer;
+  }
+  .link-move-btn:disabled{opacity:.3;cursor:default;}
+  .format-hint{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;
+    margin:4px 0 10px;line-height:1.6;
+  }
+  .section-title-input{
+    width:100%;padding:7px 9px;margin-bottom:8px;
+    border:1.5px dashed var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#453A24;
+  }
+  .section-title-input:focus{outline:none;border-color:var(--marigold);border-style:solid;}
+  .section-title-input::placeholder{color:#8a8062;}
+
+  /* ---- flexible table builder (inside Custom Sections) ---- */
+  .custom-type-toggle{display:flex;gap:6px;margin-bottom:10px;}
+  .custom-type-toggle button{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    background:var(--paper);border:1.5px solid var(--line-strong);color:#6B6248;
+    padding:5px 11px;cursor:pointer;
+  }
+  .custom-type-toggle button.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .tbl-columns-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center;}
+  .tbl-col-chip{display:flex;align-items:center;gap:4px;background:var(--paper-alt);border:1px solid var(--line-strong);padding:3px 3px 3px 8px;}
+  .tbl-col-chip input{
+    border:none;background:transparent;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;
+    width:110px;outline:none;color:var(--ink);
+  }
+  .tbl-col-chip button{
+    background:transparent;border:none;color:var(--red);cursor:pointer;font-size:12px;padding:2px 6px;
+  }
+  .tbl-add-col-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--teal);color:var(--teal);
+    padding:4px 9px;cursor:pointer;
+  }
+  .tbl-wrap{overflow-x:auto;margin-bottom:10px;border:1px solid var(--line-strong);}
+  .tbl-grid{border-collapse:collapse;width:100%;}
+  .tbl-grid th{
+    background:var(--paper-alt);font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.03em;color:#453A24;padding:6px 8px;text-align:left;
+    border:1px solid var(--line-strong);white-space:nowrap;
+  }
+  .tbl-grid td{border:1px solid var(--line);padding:4px;vertical-align:top;min-width:130px;}
+  .tbl-cell-text{
+    width:100%;border:1px solid transparent;background:transparent;padding:5px 6px;
+    font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;outline:none;
+  }
+  .tbl-cell-text:focus{border-color:var(--line-strong);background:var(--paper);}
+  .tbl-cell-url{
+    width:100%;border:1px solid var(--teal);background:var(--paper);padding:4px 6px;margin-top:3px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;outline:none;color:var(--teal);
+  }
+  .tbl-cell-opts{display:flex;gap:8px;padding:2px 6px 4px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8a8062;flex-wrap:wrap;}
+  .tbl-cell-opts label{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;}
+  .tbl-cell-merged{
+    padding:10px 8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;font-style:italic;
+    background:repeating-linear-gradient(135deg, var(--paper-alt), var(--paper-alt) 6px, var(--paper) 6px, var(--paper) 12px);
+  }
+  .tbl-row-remove-cell{width:1%;white-space:nowrap;text-align:center;border:none;background:transparent;}
+  .tbl-row-remove-cell button{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 8px;cursor:pointer;
+  }
+  .tbl-add-row-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--marigold);color:var(--marigold);
+    padding:5px 10px;cursor:pointer;margin-top:2px;
+  }
+  .link-row-wrap{margin-bottom:10px;}
+  .link-row-wrap .link-row{margin-bottom:4px;}
+  .link-upload-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .link-blink-toggle{
+    display:flex;align-items:center;gap:6px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B6248;cursor:pointer;
+    margin-left:auto;
+  }
+  .link-blink-toggle input{cursor:pointer;}
+  .upload-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:transparent;border:1px dashed var(--teal);color:var(--teal);
+    padding:5px 10px;cursor:pointer;display:inline-block;
+  }
+  .upload-btn:hover{background:rgba(27,107,107,.08);}
+  .upload-status{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;}
+  .upload-status.err{color:var(--red);}
+  .upload-status.ok{color:var(--green);}
+  .region-block{
+    border:1px solid var(--line-strong);padding:12px 14px;margin-bottom:12px;background:var(--paper);
+  }
+  .region-top-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;}
+  .region-top-row input{
+    padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+  .region-remove-block{
+    background:transparent;border:1px solid var(--red);color:var(--red);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:0 10px;cursor:pointer;white-space:nowrap;
+  }
+  .region-date-line{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px;}
+  @media (max-width:700px){.region-date-line{grid-template-columns:1fr;}}
+  .region-date-line input{
+    padding:7px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;
+  }
+  .region-date-remove{
+    background:transparent;border:1px solid var(--line-strong);color:#453A24;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;cursor:pointer;
+  }
+  .add-row-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    background:transparent;border:1px solid var(--ink);color:var(--ink);
+    padding:7px 12px;cursor:pointer;margin-top:4px;
+  }
+
+  .custom-section-block{
+    border:1px solid var(--line-strong);padding:12px 14px;margin-bottom:12px;background:var(--paper);
+  }
+  .move-section-btn{
+    background:transparent;border:1px solid var(--line-strong);color:#453A24;
+    font-family:'IBM Plex Mono',monospace;font-size:13px;padding:0 10px;cursor:pointer;white-space:nowrap;
+  }
+  .move-section-btn:disabled{opacity:.3;cursor:default;}
+  .custom-section-top{display:flex;gap:8px;margin-bottom:10px;}
+  .custom-section-top input{
+    flex:1;padding:8px 9px;border:1.5px solid var(--line-strong);background:var(--paper-alt);
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+  }
+
+  .order-row{
+    display:flex;align-items:center;gap:10px;
+    border:1px solid var(--line-strong);background:var(--paper);
+    padding:8px 12px;margin-bottom:6px;
+  }
+  .order-row .order-label{flex:1;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;}
+  .order-row .order-btns{display:flex;gap:4px;}
+  .order-row .order-btns button{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    background:transparent;border:1px solid var(--line-strong);color:var(--ink);
+    padding:3px 9px;cursor:pointer;
+  }
+  .order-row .order-btns button:disabled{opacity:.3;cursor:default;}
+  .order-row .order-btns button:not(:disabled):hover{border-color:var(--marigold);color:var(--marigold);}
+
+  .panel{border:1px solid var(--line-strong);background:var(--paper-alt);}
+  .panel-title{
+    font-family:'Zilla Slab',serif;font-size:16px;font-weight:600;
+    padding:12px 16px;border-bottom:1px solid var(--line-strong);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .panel-title .mode-badge{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 7px;
+    border-radius:999px;border:1px solid var(--marigold);color:var(--marigold);
+  }
+  .panel-body{padding:16px;}
+
+  .field select{
+    width:100%;padding:9px 10px;border:1.5px solid var(--line-strong);
+    background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;
+  }
+  .field-row{display:flex;gap:10px;}
+  .field-row .field{flex:1;}
+
+  .btn-row{display:flex;gap:8px;margin-top:4px;}
+  .btn-secondary{
+    flex:1;padding:10px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;
+  }
+  .btn-add{flex:2;}
+
+  table{width:100%;border-collapse:collapse;}
+  thead th{
+    text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    color:#453A24;text-transform:uppercase;letter-spacing:.04em;font-weight:700;
+    border-bottom:2px solid var(--ink);padding:8px 10px;
+  }
+  tbody td{
+    padding:10px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;
+  }
+  tbody tr:hover{background:#F6F0DF;}
+  .row-title{font-weight:700;}
+  .row-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#453A24;margin-top:3px;font-weight:500;}
+  .badge{
+    font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;
+    border:1.5px solid var(--red);color:var(--red);border-radius:999px;padding:2px 7px;
+    display:inline-block;
+  }
+  .badge.green{border-color:var(--green);color:var(--green);}
+  .badge.blue{border-color:var(--teal);color:var(--teal);}
+  .badge.amber{border-color:var(--marigold);color:var(--marigold);}
+  .badge.purple{border-color:#6B4FA0;color:#6B4FA0;}
+  .badge.grey{border-color:#6b6558;color:#6b6558;}
+  .cat-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    padding:2px 8px;border:1px solid var(--line-strong);display:inline-block;
+  }
+  .row-actions{display:flex;gap:6px;white-space:nowrap;}
+  .row-actions button{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    border:1px solid var(--line-strong);background:var(--paper);
+    padding:5px 9px;cursor:pointer;
+  }
+  .row-actions button.edit:hover{border-color:var(--marigold);color:var(--marigold);}
+  .row-actions button.copy:hover{border-color:var(--teal, #1B6B6B);color:var(--teal, #1B6B6B);}
+  .row-actions button.del:hover{border-color:var(--red);color:var(--red);}
+  .perm-note{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;font-style:italic;
+  }
+
+  .empty-note{
+    text-align:center;padding:30px 10px;color:#453A24;font-size:12.5px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  .disclaimer-strip{
+    margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#544928;
+    border-top:1px dashed var(--line-strong);padding-top:12px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <img src="sarkaridisha-logo.png" alt="SarkariDisha" class="stamp-mini">
+        <div>
+          <h1>SarkariDisha</h1>
+          <div class="sub">ADMIN PANEL</div>
+        </div>
+      </div>
+      <div class="who" id="whoBar" style="display:none;">
+        <span>Signed in as <b id="whoName">—</b></span>
+        <span id="roleBadge" class="role-badge">—</span>
+        <a href="sarkaridisha-team.html" id="manageTeamLink" class="logout" style="display:none;text-decoration:none;">Manage Team</a>
+        <button class="logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LOGIN ================= -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <img src="sarkaridisha-logo.png" alt="SarkariDisha" class="stamp-logo">
+      <h2>Admin Login</h2>
+      <p class="hint">AUTHORIZED PERSONNEL ONLY</p>
+      <div class="login-error" id="loginError">Invalid username or password.</div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="userInput" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="passInput" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="tryLogin()">Log In</button>
+      <div class="demo-creds">Use the email/password you created in Supabase → Authentication → Users</div>
+    </div>
+  </div>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div id="dashboard">
+    <div class="wrap">
+      <div class="dash-head">
+        <div>
+          <h2>Manage Listings</h2>
+          <p>Changes here are for preview only — nothing is saved after refresh.</p>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+
+      <div class="autosave-banner" id="autosaveBanner">
+        <span id="autosaveBannerText"></span>
+        <div class="autosave-banner-actions">
+          <button type="button" onclick="restoreAutosave()">Restore</button>
+          <button type="button" class="discard" onclick="discardAutosave()">Discard</button>
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <!-- Add/Edit form -->
+        <div class="panel">
+          <div class="panel-title">
+            <span id="formTitle">Add New Listing</span>
+            <span class="mode-badge" id="modeBadge" style="display:none;">EDITING</span>
+          </div>
+          <div class="panel-body">
+            <div class="section-label">Basic Info</div>
+            <div class="field">
+              <label>Category</label>
+              <select id="f_cat">
+                <option value="job">Latest Job</option>
+                <option value="admission">Admission</option>
+                <option value="result">Result</option>
+                <option value="admit">Admit Card</option>
+                <option value="key">Answer Key</option>
+              </select>
+            </div>
+            <div class="field" id="fieldwrap_f_title">
+              <label>Title</label>
+              <input type="text" id="f_title" placeholder="e.g. Junior Engineer, 412 Posts">
+              <div class="field-error-msg" id="err_f_title">Title is required.</div>
+            </div>
+            <div class="field-grid2">
+              <div class="field" id="fieldwrap_f_dept">
+                <label>Department</label>
+                <input type="text" id="f_dept" placeholder="e.g. SPSC">
+                <div class="field-error-msg" id="err_f_dept">Department is required.</div>
+              </div>
+              <div class="field">
+                <label>Reference No.</label>
+                <input type="text" id="f_ref" placeholder="Advt No. 07/2026">
+              </div>
+            </div>
+            <div class="field-grid2">
+              <div class="field">
+                <label>Total Posts (optional — shown on homepage card)</label>
+                <input type="text" id="f_total_post" placeholder="e.g. 412">
+              </div>
+              <div class="field">
+                <label>Short date text (shown on homepage card)</label>
+                <input type="text" id="f_date" placeholder="Apply by 28 Jul 2026">
+              </div>
+            </div>
+            <div class="field">
+              <label>Badge (optional)</label>
+              <select id="f_tag">
+                <option value="">— none —</option>
+                <option value="NEW">NEW (red)</option>
+                <option value="DECLARED">DECLARED (green)</option>
+                <option value="COMING SOON">COMING SOON (blue)</option>
+                <option value="CLOSING SOON">CLOSING SOON (amber)</option>
+                <option value="EXTENDED">EXTENDED (purple)</option>
+                <option value="CLOSED">CLOSED (grey)</option>
+              </select>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;margin-top:5px;line-height:1.6;">
+                NEW automatically stops showing on its own 10 days after this listing was created — no need to come back and remove it. The other badges stay until you change them here, unless auto-update (below) is switched on.
+              </div>
+            </div>
+            <div class="field-grid2">
+              <div class="field">
+                <label>Opening Date (for automatic COMING SOON → NEW — optional)</label>
+                <input type="date" id="f_opening_date">
+              </div>
+              <div class="field">
+                <label>Closing Date (for automatic CLOSING SOON / CLOSED — optional)</label>
+                <input type="date" id="f_closing_date">
+              </div>
+            </div>
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer;">
+                <input type="checkbox" id="f_auto_badge" style="width:16px;height:16px;cursor:pointer;">
+                Auto-update this badge
+              </label>
+            </div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;margin:-6px 0 14px;line-height:1.6;">
+              When "Auto-update this badge" is ON: if an <b>Opening Date</b> is set, the badge automatically switches from COMING SOON to <b>NEW</b> once that date arrives, then stops showing 10 days later, same as a manually-set NEW badge. If a <b>Closing Date</b> is set, the badge automatically switches to <b>CLOSING SOON</b> starting 10 days before that date, then to <b>CLOSED</b> the day after it passes. Both can be used together on the same listing. It only overrides the badge above during these windows; outside them, the badge above is shown as-is. Leave this OFF to keep full manual control, exactly like before.
+            </div>
+            <div class="field" id="fieldwrap_f_desc">
+              <label>Full Description (shown on detail page)</label>
+              <textarea id="f_desc" rows="4" style="width:100%;padding:9px 10px;border:1.5px solid var(--line-strong);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;resize:vertical;" placeholder="General notes, how to apply, etc."></textarea>
+              <div class="field-error-msg" id="err_f_desc">Description is required.</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;margin-top:5px;line-height:1.6;">
+                Formatting works here and in most text fields: **bold**, ##italic##, %%underline%%, [word](https://url) to make a single word or phrase clickable, or combine freely — e.g. **[word](https://url)** for a bold clickable word. (Not available inside the Important Links section, since those rows are already links.)
+              </div>
+            </div>
+
+            <div class="section-label">Important Dates</div>
+            <input type="text" id="f_title_dates" class="section-title-input" placeholder="Section title shown on page (optional — default: &quot;Important Dates&quot;)">
+            <div id="dateRowsContainer"></div>
+
+            <div class="section-label">Application Fee</div>
+            <input type="text" id="f_title_fees" class="section-title-input" placeholder="Section title shown on page (optional — default: &quot;Application Fee&quot;)">
+            <div id="feeRowsContainer"></div>
+
+            <div class="section-label">Age Limit</div>
+            <input type="text" id="f_title_age" class="section-title-input" placeholder="Section title shown on page (optional — default: &quot;Age Limit&quot;)">
+            <div id="ageRowsContainer"></div>
+
+            <div class="section-label">Vacancy Details</div>
+            <input type="text" id="f_title_vacancy" class="section-title-input" placeholder="Section title shown on page (optional — default: &quot;Vacancy Details&quot;)">
+            <div class="format-hint">Grouped by branch when you need it (e.g. IT / Finance / Operations, each with its own posts), or just leave "Branch" blank on the one group for a plain flat list. Each group can share one eligibility list across all its posts, or let each post have its own.</div>
+            <div id="vacancyRowsContainer"></div>
+            <button type="button" class="add-row-btn" onclick="addVacancyGroup()">+ Add Branch / Post Group</button>
+
+            <div class="section-label">Links</div>
+            <input type="text" id="f_title_links" class="section-title-input" placeholder="Section title shown on page (optional — default: &quot;Important Links&quot;)">
+            <div class="format-hint">Paste a URL, or click "Upload File" to upload a PDF/image straight from your computer — it fills the URL in for you automatically, and opens from your own site's address (sarkaridisha.netlify.app/notices/...) no matter who uploads it or from where.</div>
+            <div id="linkRowsContainer"></div>
+            <button type="button" class="add-elig-btn" onclick="addLinkRow()">+ Add Link</button>
+
+            <div class="section-label">Custom Sections (Optional)</div>
+            <div class="format-hint">Every section below is fully optional and works the same way: add or remove as many rows and columns as you need, and an empty row/column simply won't appear on the live page. The three quick-start buttons just pre-fill a table with a sensible headline and column names — you can rename or add to them afterwards, exactly like any other Custom Section. In a table cell, you can either type <b>[word](https://url)</b> in the cell's text to make just that word clickable, or tick the cell's 🔗 Link checkbox to make the <b>whole cell</b> clickable — if you use both in the same cell, the 🔗 Link checkbox's address wins and the cell links there.</div>
+            <div id="customSectionsContainer"></div>
+            <button type="button" class="add-row-btn" onclick="addCustomSection()">+ Add Section</button>
+            <button type="button" class="add-row-btn" onclick="addCustomSectionTemplate('physical')">+ Add Physical Standards Table</button>
+            <button type="button" class="add-row-btn" onclick="addCustomSectionTemplate('region')">+ Add Region-wise Table</button>
+            <button type="button" class="add-row-btn" onclick="addCustomSectionTemplate('category')">+ Add Category-wise Table</button>
+
+            <div class="section-label">Share Poster (Optional)</div>
+            <div class="format-hint">Recommended size: <b>1080 × 1350px</b> (portrait, 4:5 ratio) — this displays cleanly at the end of the post and still crops sensibly in WhatsApp/social link previews. JPG or PNG, ideally under 500KB so it loads fast.</div>
+            <div class="link-row-wrap">
+              <div class="link-row">
+                <input type="text" placeholder="https://... or /notices/poster.jpg" id="f_poster_url" oninput="posterUrlChanged()">
+                <button type="button" class="link-remove" onclick="document.getElementById('f_poster_url').value=''; posterUrlChanged();">✕</button>
+              </div>
+              <div class="link-upload-row">
+                <label class="upload-btn">
+                  🖼 Upload Poster
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadPosterFile(this)">
+                </label>
+                <span class="upload-status" id="posterUploadStatus"></span>
+              </div>
+              <img id="posterPreview" src="" alt="Poster preview" style="display:none;max-width:220px;margin-top:10px;border:1.5px solid var(--line-strong);">
+            </div>
+
+            <div class="section-label section-label-static">Section Order</div>
+            <div id="sectionOrderContainer"></div>
+
+            <div class="btn-row">
+              <button class="btn-secondary" id="cancelEditBtn" style="display:none;" onclick="cancelEdit()">Cancel</button>
+              <button class="btn-secondary" onclick="previewListing()" style="background:transparent;border:1.5px solid var(--teal);color:var(--teal);">👁 Preview</button>
+              <button class="btn-secondary" id="draftBtn" onclick="saveListing(true)" style="background:transparent;border:1.5px solid var(--line-strong);color:var(--ink);">💾 Save as Draft</button>
+              <button class="btn-secondary btn-add" onclick="saveListing(false)" id="saveBtn">+ Add Listing</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listings table -->
+        <div class="panel">
+          <div class="panel-title">
+            <span id="listingsPanelTitle">Current Listings</span>
+            <span class="mode-badge" id="countBadge">— items</span>
+          </div>
+          <div class="panel-body" style="padding:14px 16px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <input type="text" id="tableSearchInput" placeholder="🔍 Search by title, department, or reference number…"
+              style="flex:1;min-width:200px;padding:9px 12px;border:1.5px solid var(--line-strong);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13px;"
+              oninput="handleTableSearchInput();">
+            <select id="tableCatFilter" onchange="tableVisibleCount = 10; renderTable();"
+              style="padding:9px 10px;border:1.5px solid var(--line-strong);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13px;">
+              <option value="all">All Categories</option>
+              <option value="job">Latest Job</option>
+              <option value="admission">Admission</option>
+              <option value="result">Result</option>
+              <option value="admit">Admit Card</option>
+              <option value="key">Answer Key</option>
+            </select>
+            <select id="tableStatusFilter" onchange="tableVisibleCount = 10; renderTable();"
+              style="padding:9px 10px;border:1.5px solid var(--line-strong);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:13px;">
+              <option value="all">Published + Drafts</option>
+              <option value="published">Published Only</option>
+              <option value="draft">Drafts Only</option>
+            </select>
+            <button type="button" id="recycleBinToggleBtn" class="btn-secondary" onclick="toggleRecycleBinView()" style="width:auto;padding:9px 16px;white-space:nowrap;">🗑 Recycle Bin (<span id="recycleBinCount">0</span>)</button>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <table>
+              <thead>
+                <tr><th>Category</th><th>Title / Meta</th><th>Posted By</th><th>Badge</th><th></th></tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+            <div class="empty-note" id="emptyNote" style="display:none;">No listings yet — add one above.</div>
+            <div id="tableSeeMoreWrap" style="display:none;padding:14px 16px;text-align:center;border-top:1px solid var(--line);">
+              <button type="button" class="btn-secondary" id="tableSeeMoreBtn" onclick="showMoreTableRows()" style="display:inline-block;width:auto;padding:9px 20px;">See More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer-strip">
+        This admin panel is connected to a real Supabase database — adding, editing, or deleting a listing here actually saves it, and the public site (index.html) reads from the same table. Login uses real Supabase Authentication. Two roles exist: <b>Admins</b> can add, edit, and delete any listing, and manage the team on the separate Manage Team page; <b>Editors</b> can add listings and edit only the ones they created, but cannot delete and don't see the Manage Team link.
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---- Supabase connection ----
+  // PASTE YOUR OWN VALUES HERE (Project Settings -> API in Supabase):
+  const SUPABASE_URL = 'https://xnagaojcdrcjthoazogp.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Gh-xRyHii3daT3RodbJGQw_m9ekf_p7';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- real auth ----
+  // ---- current user's role (admin sees/does everything, editor is restricted) ----
+  let currentUserId = null;
+  let currentUserRole = 'editor'; // safe default until confirmed
+
+  async function fetchUserRole(){
+    const { data: userData } = await sb.auth.getUser();
+    currentUserId = userData?.user?.id || null;
+
+    if(!currentUserId){
+      currentUserRole = 'editor';
+      return;
+    }
+
+    const { data, error } = await sb
+      .from('admin_roles')
+      .select('role')
+      .eq('user_id', currentUserId)
+      .maybeSingle();
+
+    currentUserRole = (!error && data && data.role === 'admin') ? 'admin' : 'editor';
+
+    const roleBadge = document.getElementById('roleBadge');
+    if(roleBadge){
+      roleBadge.textContent = currentUserRole === 'admin' ? 'ADMIN' : 'EDITOR';
+      roleBadge.classList.toggle('role-admin', currentUserRole === 'admin');
+      roleBadge.classList.toggle('role-editor', currentUserRole === 'editor');
+    }
+    const manageTeamLink = document.getElementById('manageTeamLink');
+    if(manageTeamLink){
+      manageTeamLink.style.display = currentUserRole === 'admin' ? 'inline-block' : 'none';
+    }
+  }
+
+  // ---- "Posted by" lookup ----
+  // admin_roles needs an `email` column (filled in by hand, same place you already set each
+  // person's role) for this to resolve to anything other than "Unknown". Once nicknames exist,
+  // swap this to read a `nickname` column instead — nothing else about this needs to change.
+  let USER_EMAILS = {};
+  async function fetchUserEmails(){
+    const { data, error } = await sb.from('admin_roles').select('user_id, email');
+    if(error || !data) return;
+    USER_EMAILS = {};
+    data.forEach(row => { if(row.user_id) USER_EMAILS[row.user_id] = row.email || ''; });
+  }
+  function posterLabel(createdBy){
+    if(!createdBy) return '—';
+    return USER_EMAILS[createdBy] || 'Unknown user';
+  }
+
+  async function tryLogin(){
+    const email = document.getElementById('userInput').value.trim();
+    const password = document.getElementById('passInput').value.trim();
+    const err = document.getElementById('loginError');
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    if(error){
+      err.textContent = error.message;
+      err.style.display = 'block';
+      return;
+    }
+
+    err.style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('whoBar').style.display = 'flex';
+    document.getElementById('whoName').textContent = data.user.email;
+    await fetchUserRole();
+    await fetchUserEmails();
+    clearForm();
+    await autoPurgeOldRecycleBinItems();
+    loadListings();
+    updateRecycleBinCount();
+    checkForAutosaveRestore();
+  }
+
+  async function logout(){
+    await sb.auth.signOut();
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('whoBar').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('userInput').value = '';
+    document.getElementById('passInput').value = '';
+  }
+  document.getElementById('passInput').addEventListener('keyup', e=>{ if(e.key==='Enter') tryLogin(); });
+
+  // ---- local autosave backup ----
+  // Backs up whatever's currently in the Add/Edit Listing form to this browser's localStorage
+  // (not the database) so nothing is lost if the tab crashes, the browser closes instantly,
+  // the laptop dies, wifi drops mid-save, etc. This is separate from clicking "Save as Draft" —
+  // that writes a real row to Supabase; this is just a local safety net that survives even when
+  // nothing was ever deliberately saved.
+  let autosavePaused = false;   // true while the restore banner is up, so we don't overwrite the
+                                 // very backup we're asking the user about with a blank form
+  let autosaveDebounceTimer = null;
+
+  function autosaveKey(){
+    return 'sd_admin_autosave_' + (currentUserId || 'anon');
+  }
+
+  function getAutosaveRecord(){
+    try{
+      const raw = localStorage.getItem(autosaveKey());
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+
+  function clearAutosaveRecord(){
+    try{ localStorage.removeItem(autosaveKey()); } catch(e){}
+  }
+
+  function performAutosave(){
+    if(autosavePaused) return;
+    const dashboard = document.getElementById('dashboard');
+    if(!dashboard || dashboard.style.display === 'none') return;
+    const title = document.getElementById('f_title')?.value.trim();
+    if(!title) return; // nothing worth backing up yet
+    try{
+      const record = { savedAt: new Date().toISOString(), editingId, payload: buildListingPayload('draft') };
+      localStorage.setItem(autosaveKey(), JSON.stringify(record));
+    } catch(e){ /* storage full or unavailable — silently skip, nothing else we can do locally */ }
+  }
+
+  function scheduleAutosave(){
+    clearTimeout(autosaveDebounceTimer);
+    autosaveDebounceTimer = setTimeout(performAutosave, 1500);
+  }
+
+  // Catches normal typing/selecting (debounced, so it doesn't run on every keystroke) —
+  document.addEventListener('input', scheduleAutosave);
+  document.addEventListener('change', scheduleAutosave);
+  // — plus a plain interval as a safety net for changes that don't fire input/change on the form
+  // itself, like adding/removing a table row or reordering sections.
+  setInterval(performAutosave, 20000);
+  // — plus best-effort saves right before the page might disappear. None of these are guaranteed
+  // to fire on a hard crash or a killed process, but between the debounce, the interval, and these,
+  // realistically at most the last ~20 seconds of typing is ever at risk.
+  window.addEventListener('pagehide', performAutosave);
+  window.addEventListener('beforeunload', performAutosave);
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'hidden') performAutosave();
+  });
+
+  function relativeTimeFromNow(iso){
+    const then = new Date(iso).getTime();
+    if(isNaN(then)) return 'earlier';
+    const diffMin = Math.round((Date.now() - then) / 60000);
+    if(diffMin < 1) return 'moments ago';
+    if(diffMin === 1) return '1 minute ago';
+    if(diffMin < 60) return `${diffMin} minutes ago`;
+    const diffHr = Math.round(diffMin / 60);
+    if(diffHr === 1) return '1 hour ago';
+    if(diffHr < 24) return `${diffHr} hours ago`;
+    return new Date(iso).toLocaleString('en-IN', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+  }
+
+  // Called once right after login/session-restore, before anything the user does could
+  // overwrite the backup — offers to bring back whatever was last auto-saved for this browser.
+  function checkForAutosaveRestore(){
+    const rec = getAutosaveRecord();
+    if(!rec || !rec.payload || !rec.payload.title) return;
+    autosavePaused = true;
+    const banner = document.getElementById('autosaveBanner');
+    const text = document.getElementById('autosaveBannerText');
+    text.textContent = `We found unsaved changes to "${rec.payload.title}" from ${relativeTimeFromNow(rec.savedAt)} — probably from a browser crash, accidental close, or lost connection. Restore it into the form below?`;
+    banner.style.display = 'flex';
+  }
+
+  function hideAutosaveBanner(){
+    document.getElementById('autosaveBanner').style.display = 'none';
+  }
+
+  function restoreAutosave(){
+    const rec = getAutosaveRecord();
+    if(!rec || !rec.payload){ hideAutosaveBanner(); autosavePaused = false; return; }
+
+    clearFieldError('fieldwrap_f_title');
+    clearFieldError('fieldwrap_f_dept');
+    clearFieldError('fieldwrap_f_desc');
+
+    // If it was mid-edit of a listing that still exists, go back into Edit mode for that listing;
+    // otherwise (or if that listing's since been deleted) restore it as a new, unsaved listing.
+    const existing = rec.editingId ? LISTINGS.find(l => l.id === rec.editingId) : null;
+    editingId = existing ? rec.editingId : null;
+    populateFormFromPayload(rec.payload);
+
+    if(existing){
+      document.getElementById('formTitle').textContent = 'Edit Listing';
+      document.getElementById('modeBadge').style.display = 'inline-block';
+      document.getElementById('cancelEditBtn').style.display = 'block';
+      document.getElementById('saveBtn').textContent = existing.status === 'draft' ? 'Publish' : 'Save Changes';
+      document.getElementById('draftBtn').textContent = existing.status === 'draft' ? '💾 Save Draft Changes' : '💾 Unpublish to Draft';
+    } else {
+      document.getElementById('formTitle').textContent = 'Add New Listing';
+      document.getElementById('modeBadge').style.display = 'none';
+      document.getElementById('cancelEditBtn').style.display = 'none';
+      document.getElementById('saveBtn').textContent = '+ Add Listing';
+      document.getElementById('draftBtn').textContent = '💾 Save as Draft';
+    }
+
+    expandAllSections();
+    hideAutosaveBanner();
+    autosavePaused = false;
+    showToast('Restored your unsaved changes — remember to Publish or Save as Draft to keep them.');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function discardAutosave(){
+    clearAutosaveRecord();
+    hideAutosaveBanner();
+    autosavePaused = false;
+  }
+
+  // ---- collapse/expand for every form section (Important Dates, Fees, Age, Vacancy, Links,
+  // Custom Sections, Share Poster, Section Order, etc.) — click a section's heading to toggle it.
+  // Works generically off the existing .section-label markers, so any section added later
+  // automatically becomes collapsible too, with no extra wiring needed.
+  function initCollapsibleSections(){
+    const panelBody = document.querySelector('.panel-body');
+    if(!panelBody || panelBody.dataset.collapsibleInit) return;
+    panelBody.dataset.collapsibleInit = '1';
+
+    const children = Array.from(panelBody.children);
+    let currentBody = null;
+    let sectionIdx = 0;
+
+    children.forEach(child => {
+      if(child.classList.contains('section-label')){
+        sectionIdx++;
+
+        // "Section Order" opts out of collapse/expand entirely — it stays a plain,
+        // always-visible heading like every section used to be.
+        if(child.classList.contains('section-label-static')){
+          currentBody = null;
+          return;
+        }
+
+        const arrow = document.createElement('span');
+        arrow.className = 'section-toggle-arrow';
+        child.appendChild(arrow);
+
+        currentBody = document.createElement('div');
+        currentBody.className = 'section-body';
+        child.parentNode.insertBefore(currentBody, child.nextSibling);
+
+        // "Basic Info" (the first section) stays open by default since it holds
+        // required fields; every other section starts collapsed to keep long
+        // listings manageable. Expanding a section shows exactly what it always did.
+        const startCollapsed = sectionIdx !== 1;
+        if(startCollapsed) currentBody.classList.add('collapsed');
+        arrow.textContent = startCollapsed ? '▸' : '▾';
+
+        // capture this section's own body in a variable scoped to this iteration —
+        // `currentBody` itself gets reassigned as the loop continues, so the closure
+        // below must not reference it directly or every header would end up toggling
+        // whichever section was created last.
+        const thisBody = currentBody;
+        child.addEventListener('click', () => {
+          thisBody.classList.toggle('collapsed');
+          arrow.textContent = thisBody.classList.contains('collapsed') ? '▸' : '▾';
+        });
+      } else if(child.classList.contains('btn-row')){
+        // the Cancel / Save as Draft / Add Listing buttons stay outside any section
+        currentBody = null;
+      } else if(currentBody){
+        currentBody.appendChild(child);
+      }
+    });
+  }
+  initCollapsibleSections();
+
+  function expandAllSections(){
+    document.querySelectorAll('.section-body').forEach(body => body.classList.remove('collapsed'));
+    document.querySelectorAll('.section-toggle-arrow').forEach(arrow => arrow.textContent = '▾');
+  }
+
+  function collapseAllSections(){
+    // leave the first section (Basic Info) open, same as the default state on page load
+    document.querySelectorAll('.section-body').forEach(body => body.classList.add('collapsed'));
+    document.querySelectorAll('.section-toggle-arrow').forEach(arrow => arrow.textContent = '▸');
+    const firstBody = document.querySelector('.section-body');
+    const firstArrow = document.querySelector('.section-toggle-arrow');
+    if(firstBody){ firstBody.classList.remove('collapsed'); }
+    if(firstArrow){ firstArrow.textContent = '▾'; }
+  }
+
+  // ---- stay logged in across refresh, if a session already exists ----
+  (async () => {
+    const { data } = await sb.auth.getSession();
+    if(data.session){
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('whoBar').style.display = 'flex';
+      document.getElementById('whoName').textContent = data.session.user.email;
+      await fetchUserRole();
+      await fetchUserEmails();
+      clearForm();
+      await autoPurgeOldRecycleBinItems();
+      loadListings();
+      updateRecycleBinCount();
+      checkForAutosaveRestore();
+    }
+  })();
+
+  // ---- real listings, backed by Supabase ----
+  let LISTINGS = [];
+  let editingId = null;
+
+  const catLabels = {job:'Latest Job', admission:'Admission', result:'Result', admit:'Admit Card', key:'Answer Key'};
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(()=>{ t.style.display='none'; }, 2400);
+  }
+
+  // ---- shared "flexible table" engine ----
+  // Powers Important Dates, Application Fee, and Age Limit: any number of columns and rows,
+  // optional link cells, and cells merged UP (rowspan, like Custom Sections already had) or
+  // now also merged LEFT (colspan) — a cell can only merge in one direction at a time.
+  function escAttr(s){
+    return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  }
+
+  // ---- badges (kept in sync with index.html — see comments there) ----
+  const TAG_COLORS = {
+    'NEW': 'red',
+    'DECLARED': 'green',
+    'COMING SOON': 'blue',
+    'CLOSING SOON': 'amber',
+    'EXTENDED': 'purple',
+    'CLOSED': 'grey',
+  };
+  function tagColorFor(tag){
+    return TAG_COLORS[tag] || 'red';
+  }
+  const NEW_BADGE_DAYS = 10;
+  const CLOSING_SOON_DAYS = 10;
+  // autoBadge governs two independent automatic transitions, checked in this order:
+  //  1) closingDate: switches to CLOSING SOON in the window before it, then CLOSED once passed.
+  //  2) openingDate: switches COMING SOON -> NEW once that date arrives, then behaves exactly
+  //     like a manually-set NEW badge and stops showing NEW_BADGE_DAYS days after opening.
+  // A listing can use either date, both, or neither. When autoBadge is off, or neither date
+  // applies right now, this falls through to the manually-picked tag, including the existing
+  // NEW_BADGE_DAYS auto-expiry for a manually-set NEW badge (timed from created_at instead).
+  function effectiveTag(tag, createdAt, closingDate, openingDate, autoBadge){
+    if(autoBadge && closingDate){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const closing = new Date(closingDate + 'T00:00:00');
+      const diffDays = Math.round((closing - today) / (24 * 60 * 60 * 1000));
+      if(diffDays < 0) return 'CLOSED';
+      if(diffDays <= CLOSING_SOON_DAYS) return 'CLOSING SOON';
+    }
+    if(autoBadge && openingDate){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const opening = new Date(openingDate + 'T00:00:00');
+      const daysSinceOpen = Math.round((today - opening) / (24 * 60 * 60 * 1000));
+      if(daysSinceOpen >= 0 && daysSinceOpen <= NEW_BADGE_DAYS) return 'NEW';
+    }
+    if(tag === 'NEW' && createdAt){
+      const ageMs = Date.now() - new Date(createdAt).getTime();
+      if(ageMs > NEW_BADGE_DAYS * 24 * 60 * 60 * 1000) return '';
+    }
+    return tag || '';
+  }
+
+  function newFlexCell(){
+    return { text:'', url:'', hasLink:false, mergeUp:false, mergeLeft:false };
+  }
+
+  let dateTable = { columns:['Field', 'Date / Value'], rows: [] };
+  let feeTable  = { columns:['Field', 'Amount'],        rows: [] };
+  let ageTable  = { columns:['Field', 'Value'],         rows: [] };
+
+  const FLEX_TABLES = {
+    date: { get: () => dateTable, containerId: 'dateRowsContainer' },
+    fee:  { get: () => feeTable,  containerId: 'feeRowsContainer'  },
+    age:  { get: () => ageTable,  containerId: 'ageRowsContainer'  },
+  };
+
+  function isFlexTableShape(v){
+    return !!v && typeof v === 'object' && !Array.isArray(v) && Array.isArray(v.columns) && Array.isArray(v.rows);
+  }
+
+  // converts old-style [{label,value}] data (or the even older separate fixed columns,
+  // already folded into that shape upstream) into the new table shape, so existing listings
+  // still display correctly the first time they're opened after this update
+  function legacyRowsToTable(arr, columns){
+    const rows = (Array.isArray(arr) ? arr : [])
+      .filter(r => r && (r.label || r.value))
+      .map(r => ({ cells: [ {...newFlexCell(), text: r.label || ''}, {...newFlexCell(), text: r.value || ''} ] }));
+    return { columns, rows: rows.length > 0 ? rows : [{ cells: columns.map(()=>newFlexCell()) }] };
+  }
+
+  function defaultFlexTable(columns, labels){
+    return { columns, rows: labels.map(label => ({ cells: [ {...newFlexCell(), text: label}, newFlexCell() ] })) };
+  }
+  function defaultDateTable(){ return defaultFlexTable(['', ''], [
+    'Notification Out Date', 'Application Start Date', 'Last Date to Apply',
+    'Last Date — Fee Submission', 'Correction Window Last Date',
+    'Application Status Available', 'Exam Date', 'Admit Card', 'Result Date',
+  ]); }
+  function defaultFeeTable(){ return defaultFlexTable(['', ''], [
+    'General / OBC / EWS', 'SC / ST / PH (Divyang) / EBC', 'All Category — Female',
+    'Payment Modes', 'Refund Policy',
+  ]); }
+  function defaultAgeTable(){ return defaultFlexTable(['', ''], [
+    'Minimum Age', 'Maximum Age', 'Age Relaxation',
+  ]); }
+
+  function normalizeFlexTable(key){
+    const tbl = FLEX_TABLES[key].get();
+    if(!Array.isArray(tbl.columns) || tbl.columns.length === 0) tbl.columns = ['', ''];
+    if(!Array.isArray(tbl.rows)) tbl.rows = [];
+    if(tbl.rows.length === 0) tbl.rows.push({ cells: tbl.columns.map(()=>newFlexCell()) });
+    tbl.rows.forEach(row=>{
+      if(!Array.isArray(row.cells)) row.cells = [];
+      while(row.cells.length < tbl.columns.length) row.cells.push(newFlexCell());
+      row.cells.length = tbl.columns.length;
+    });
+  }
+
+  function renderFlexTable(key){
+    normalizeFlexTable(key);
+    const tbl = FLEX_TABLES[key].get();
+    const container = document.getElementById(FLEX_TABLES[key].containerId);
+
+    const colChips = tbl.columns.map((col, cIdx) => `
+      <div class="tbl-col-chip">
+        <input type="text" placeholder="Column name" value="${escAttr(col)}" oninput="flexRenameColumn('${key}', ${cIdx}, this.value)">
+        ${tbl.columns.length > 1 ? `<button type="button" onclick="flexRemoveColumn('${key}', ${cIdx})" title="Remove column">✕</button>` : ''}
+      </div>
+    `).join('');
+
+    const headerHtml = `<tr>${tbl.columns.map(c => `<th>${c ? escAttr(c) : '—'}</th>`).join('')}<th class="tbl-row-remove-cell"></th></tr>`;
+
+    const rowsHtml = tbl.rows.map((row, rIdx) => {
+      const cellsHtml = row.cells.map((cell, cIdx) => {
+        if(cell.mergeUp || cell.mergeLeft){
+          const label = cell.mergeUp ? '↑ merged with cell above' : '← merged with cell to the left';
+          const toggle = cell.mergeUp
+            ? `<label><input type="checkbox" checked onchange="flexToggleMerge('${key}', ${rIdx}, ${cIdx}, 'up', this.checked)"> Merge with cell above</label>`
+            : `<label><input type="checkbox" checked onchange="flexToggleMerge('${key}', ${rIdx}, ${cIdx}, 'left', this.checked)"> Merge with cell to left</label>`;
+          return `<td>
+            <div class="tbl-cell-merged">${label}</div>
+            <div class="tbl-cell-opts">${toggle}</div>
+          </td>`;
+        }
+        return `<td>
+          <input type="text" class="tbl-cell-text" placeholder="Text" value="${escAttr(cell.text)}" oninput="flexUpdateCell('${key}', ${rIdx}, ${cIdx}, 'text', this.value)">
+          ${(cell.hasLink || cell.url) ? `<input type="text" class="tbl-cell-url" placeholder="https://... (this cell becomes a clickable link)" value="${escAttr(cell.url)}" oninput="flexUpdateCell('${key}', ${rIdx}, ${cIdx}, 'url', this.value)">` : ''}
+          <div class="tbl-cell-opts">
+            <label><input type="checkbox" ${(cell.hasLink || cell.url) ? 'checked' : ''} onchange="flexToggleLink('${key}', ${rIdx}, ${cIdx}, this.checked)"> 🔗 Link</label>
+            ${rIdx > 0 ? `<label><input type="checkbox" onchange="flexToggleMerge('${key}', ${rIdx}, ${cIdx}, 'up', this.checked)"> Merge with cell above</label>` : ''}
+            ${cIdx > 0 ? `<label><input type="checkbox" onchange="flexToggleMerge('${key}', ${rIdx}, ${cIdx}, 'left', this.checked)"> Merge with cell to left</label>` : ''}
+          </div>
+        </td>`;
+      }).join('');
+      return `<tr>${cellsHtml}<td class="tbl-row-remove-cell"><button type="button" onclick="flexRemoveRow('${key}', ${rIdx})" title="Remove row">✕ Row</button></td></tr>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="tbl-columns-row">
+        ${colChips}
+        <button type="button" class="tbl-add-col-btn" onclick="flexAddColumn('${key}')">+ Add Column</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="tbl-grid">
+          <thead>${headerHtml}</thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+      <button type="button" class="tbl-add-row-btn" onclick="flexAddRow('${key}')">+ Add Row</button>`;
+  }
+
+  function flexAddColumn(key){
+    const tbl = FLEX_TABLES[key].get();
+    tbl.columns.push('New Column');
+    tbl.rows.forEach(row => row.cells.push(newFlexCell()));
+    renderFlexTable(key);
+  }
+  function flexRenameColumn(key, cIdx, value){
+    FLEX_TABLES[key].get().columns[cIdx] = value; // no full re-render — avoids losing focus while typing
+  }
+  function flexRemoveColumn(key, cIdx){
+    const tbl = FLEX_TABLES[key].get();
+    if(tbl.columns.length <= 1) return; // always keep at least one column
+    tbl.columns.splice(cIdx, 1);
+    tbl.rows.forEach(row => row.cells.splice(cIdx, 1));
+    renderFlexTable(key);
+  }
+  function flexAddRow(key){
+    const tbl = FLEX_TABLES[key].get();
+    tbl.rows.push({ cells: tbl.columns.map(()=>newFlexCell()) });
+    renderFlexTable(key);
+  }
+  function flexRemoveRow(key, rIdx){
+    const tbl = FLEX_TABLES[key].get();
+    if(tbl.rows.length <= 1) return; // always keep at least one row
+    tbl.rows.splice(rIdx, 1);
+    renderFlexTable(key);
+  }
+  function flexUpdateCell(key, rIdx, cIdx, field, value){
+    const cell = FLEX_TABLES[key].get().rows[rIdx].cells[cIdx];
+    cell[field] = value;
+    if(field === 'url') cell.hasLink = true;
+  }
+  function flexToggleLink(key, rIdx, cIdx, checked){
+    const cell = FLEX_TABLES[key].get().rows[rIdx].cells[cIdx];
+    cell.hasLink = checked;
+    if(!checked) cell.url = '';
+    renderFlexTable(key);
+  }
+  function flexToggleMerge(key, rIdx, cIdx, direction, checked){
+    const tbl = FLEX_TABLES[key].get();
+    const cell = tbl.rows[rIdx].cells[cIdx];
+    if(direction === 'up'){
+      if(rIdx === 0) return; // first row can never merge upward
+      cell.mergeUp = checked;
+      if(checked) cell.mergeLeft = false; // a cell merges in only one direction at a time
+    } else {
+      if(cIdx === 0) return; // first column can never merge leftward
+      cell.mergeLeft = checked;
+      if(checked) cell.mergeUp = false;
+    }
+    renderFlexTable(key);
+  }
+
+  // trims and drops empty rows before saving to Supabase
+  function buildFlexTablePayload(tbl){
+    const columns = (tbl.columns || []).map(c => (c || '').trim());
+    const rows = (tbl.rows || [])
+      .map(r => ({
+        cells: (r.cells || []).map(c => ({
+          text: (c.text || '').trim(),
+          url: (c.hasLink || c.url) ? (c.url || '').trim() : '',
+          mergeUp: !!c.mergeUp,
+          mergeLeft: !!c.mergeLeft,
+        })),
+      }))
+      // keep a row if any cell has text/url, OR if it's a merged row (merged cells carry no text of their own)
+      .filter(r => r.cells.some(c => c.text || c.url || c.mergeUp || c.mergeLeft));
+    return { columns, rows };
+  }
+
+  // ---- physical standards / measurements (group name + flexible fields, e.g. "UR/BC (Male)" -> Height/Chest/Weight) ----
+  let physicalRows = [];
+
+  function normalizePhysicalFields(row){
+    if(!Array.isArray(row.fields)) row.fields = [];
+    if(row.fields.length === 0) row.fields.push({label:'', value:''});
+  }
+
+  function renderPhysicalRows(){
+    const container = document.getElementById('physicalRowsContainer');
+    container.innerHTML = '';
+    physicalRows.forEach((row, idx)=>{
+      normalizePhysicalFields(row);
+
+      const fieldLines = row.fields.map((f, fIdx) => `
+        <div class="region-date-line">
+          <input type="text" placeholder="Field name, e.g. Height" value="${f.label || ''}" oninput="physicalRows[${idx}].fields[${fIdx}].label = this.value">
+          <input type="text" placeholder="Value, e.g. 165 Cms" value="${f.value || ''}" oninput="physicalRows[${idx}].fields[${fIdx}].value = this.value">
+          ${row.fields.length > 1 ? `<button type="button" class="region-date-remove" onclick="removePhysicalField(${idx}, ${fIdx})">✕</button>` : ''}
+        </div>
+      `).join('');
+
+      const div = document.createElement('div');
+      div.className = 'region-block';
+      div.innerHTML = `
+        <div class="region-top-row">
+          <input type="text" placeholder="Category / Test name, e.g. UR/BC (Male) or Running" value="${row.group_name || ''}" oninput="physicalRows[${idx}].group_name = this.value">
+          <button type="button" class="region-remove-block" onclick="removePhysicalRow(${idx})">Remove</button>
+        </div>
+        ${fieldLines}
+        <button type="button" class="add-elig-btn" onclick="addPhysicalField(${idx})">+ Add Field</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addPhysicalRow(){
+    physicalRows.push({group_name:'', fields:[{label:'', value:''}]});
+    renderPhysicalRows();
+  }
+
+  function removePhysicalRow(idx){
+    physicalRows.splice(idx, 1);
+    renderPhysicalRows();
+  }
+
+  function addPhysicalField(rowIdx){
+    physicalRows[rowIdx].fields.push({label:'', value:''});
+    renderPhysicalRows();
+  }
+
+  function removePhysicalField(rowIdx, fieldIdx){
+    physicalRows[rowIdx].fields.splice(fieldIdx, 1);
+    if(physicalRows[rowIdx].fields.length === 0) physicalRows[rowIdx].fields.push({label:'', value:''});
+    renderPhysicalRows();
+  }
+
+  // ---- region-wise dates (any number of regions, each with any number of custom-named date fields) ----
+  let regionRows = [];
+
+  function normalizeRegionDates(row){
+    if(!Array.isArray(row.dates)) row.dates = [];
+    if(row.dates.length === 0) row.dates.push({label:'', value:''});
+    if(!Array.isArray(row.vacancy)) row.vacancy = [];
+  }
+
+  function renderRegionRows(){
+    const container = document.getElementById('regionRowsContainer');
+    container.innerHTML = '';
+    regionRows.forEach((row, idx)=>{
+      normalizeRegionDates(row);
+
+      const dateLines = row.dates.map((d, dIdx) => `
+        <div class="region-date-line">
+          <input type="text" placeholder="Field name, e.g. Last Date to Apply" value="${d.label || ''}" oninput="regionRows[${idx}].dates[${dIdx}].label = this.value">
+          <input type="text" placeholder="Date / value" value="${d.value || ''}" oninput="regionRows[${idx}].dates[${dIdx}].value = this.value">
+          ${row.dates.length > 1 ? `<button type="button" class="region-date-remove" onclick="removeRegionDateField(${idx}, ${dIdx})">✕</button>` : ''}
+        </div>
+      `).join('');
+
+      const vacancyLines = row.vacancy.map((v, vIdx) => `
+        <div class="region-date-line">
+          <input type="text" placeholder="Post name (if it differs here)" value="${v.post || ''}" oninput="regionRows[${idx}].vacancy[${vIdx}].post = this.value">
+          <input type="text" placeholder="Total posts (if it differs here)" value="${v.posts || ''}" oninput="regionRows[${idx}].vacancy[${vIdx}].posts = this.value">
+          <button type="button" class="region-date-remove" onclick="removeRegionVacancy(${idx}, ${vIdx})">✕</button>
+        </div>
+      `).join('');
+
+      const div = document.createElement('div');
+      div.className = 'region-block';
+      div.innerHTML = `
+        <div class="region-top-row">
+          <input type="text" placeholder="Region/State/Zone, e.g. North-East States" value="${row.region || ''}" oninput="regionRows[${idx}].region = this.value">
+          <button type="button" class="region-remove-block" onclick="removeRegionRow(${idx})">Remove Region</button>
+        </div>
+        ${dateLines}
+        <button type="button" class="add-elig-btn" onclick="addRegionDateField(${idx})">+ Add Date Field</button>
+
+        <div class="region-sub-label">Post/Vacancy Count for this region (optional — only if it differs from the main Vacancy Details)</div>
+        ${vacancyLines}
+        <button type="button" class="add-elig-btn" onclick="addRegionVacancy(${idx})">+ Add Post for This Region</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addRegionRow(){
+    regionRows.push({region:'', dates:[{label:'', value:''}], vacancy:[]});
+    renderRegionRows();
+  }
+
+  function removeRegionRow(idx){
+    regionRows.splice(idx, 1);
+    renderRegionRows();
+  }
+
+  function addRegionDateField(rowIdx){
+    regionRows[rowIdx].dates.push({label:'', value:''});
+    renderRegionRows();
+  }
+
+  function removeRegionDateField(rowIdx, dateIdx){
+    regionRows[rowIdx].dates.splice(dateIdx, 1);
+    if(regionRows[rowIdx].dates.length === 0) regionRows[rowIdx].dates.push({label:'', value:''});
+    renderRegionRows();
+  }
+
+  function addRegionVacancy(rowIdx){
+    regionRows[rowIdx].vacancy.push({post:'', posts:''});
+    renderRegionRows();
+  }
+
+  function removeRegionVacancy(rowIdx, vIdx){
+    regionRows[rowIdx].vacancy.splice(vIdx, 1);
+    renderRegionRows();
+  }
+
+  // ---- category-wise details (Gen/OBC/SC/ST/EWS etc. — same pattern as region-wise) ----
+  let categoryRows = [];
+
+  function normalizeCategoryDates(row){
+    if(!Array.isArray(row.dates)) row.dates = [];
+    if(row.dates.length === 0) row.dates.push({label:'', value:''});
+    if(!Array.isArray(row.vacancy)) row.vacancy = [];
+  }
+
+  function renderCategoryRows(){
+    const container = document.getElementById('categoryRowsContainer');
+    container.innerHTML = '';
+    categoryRows.forEach((row, idx)=>{
+      normalizeCategoryDates(row);
+
+      const dateLines = row.dates.map((d, dIdx) => `
+        <div class="region-date-line">
+          <input type="text" placeholder="Field name, e.g. Fee Amount" value="${d.label || ''}" oninput="categoryRows[${idx}].dates[${dIdx}].label = this.value">
+          <input type="text" placeholder="Value" value="${d.value || ''}" oninput="categoryRows[${idx}].dates[${dIdx}].value = this.value">
+          ${row.dates.length > 1 ? `<button type="button" class="region-date-remove" onclick="removeCategoryDateField(${idx}, ${dIdx})">✕</button>` : ''}
+        </div>
+      `).join('');
+
+      const vacancyLines = row.vacancy.map((v, vIdx) => `
+        <div class="region-date-line">
+          <input type="text" placeholder="Post name (if it differs here)" value="${v.post || ''}" oninput="categoryRows[${idx}].vacancy[${vIdx}].post = this.value">
+          <input type="text" placeholder="Total posts (if it differs here)" value="${v.posts || ''}" oninput="categoryRows[${idx}].vacancy[${vIdx}].posts = this.value">
+          <button type="button" class="region-date-remove" onclick="removeCategoryVacancy(${idx}, ${vIdx})">✕</button>
+        </div>
+      `).join('');
+
+      const div = document.createElement('div');
+      div.className = 'region-block';
+      div.innerHTML = `
+        <div class="region-top-row">
+          <input type="text" placeholder="Category, e.g. General / OBC / SC / ST / EWS" value="${row.category || ''}" oninput="categoryRows[${idx}].category = this.value">
+          <button type="button" class="region-remove-block" onclick="removeCategoryRow(${idx})">Remove Category</button>
+        </div>
+        ${dateLines}
+        <button type="button" class="add-elig-btn" onclick="addCategoryDateField(${idx})">+ Add Field</button>
+
+        <div class="region-sub-label">Post/Vacancy Count for this category (optional — only if it differs from the main Vacancy Details)</div>
+        ${vacancyLines}
+        <button type="button" class="add-elig-btn" onclick="addCategoryVacancy(${idx})">+ Add Post for This Category</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addCategoryRow(){
+    categoryRows.push({category:'', dates:[{label:'', value:''}], vacancy:[]});
+    renderCategoryRows();
+  }
+
+  function removeCategoryRow(idx){
+    categoryRows.splice(idx, 1);
+    renderCategoryRows();
+  }
+
+  function addCategoryDateField(rowIdx){
+    categoryRows[rowIdx].dates.push({label:'', value:''});
+    renderCategoryRows();
+  }
+
+  function removeCategoryDateField(rowIdx, dateIdx){
+    categoryRows[rowIdx].dates.splice(dateIdx, 1);
+    if(categoryRows[rowIdx].dates.length === 0) categoryRows[rowIdx].dates.push({label:'', value:''});
+    renderCategoryRows();
+  }
+
+  function addCategoryVacancy(rowIdx){
+    categoryRows[rowIdx].vacancy.push({post:'', posts:''});
+    renderCategoryRows();
+  }
+
+  function removeCategoryVacancy(rowIdx, vIdx){
+    categoryRows[rowIdx].vacancy.splice(vIdx, 1);
+    renderCategoryRows();
+  }
+
+  // ---- Custom Sections: unlimited blocks, each either a "list" (headline+steps) ----
+  // ---- or a fully flexible "table" (any number of columns, rows, links, merged cells) ----
+  let customSections = [];
+
+  function generateSectionId(){
+    return 'c' + Math.random().toString(36).slice(2, 9);
+  }
+
+  function normalizeCustomSection(sec){
+    if(!sec.id) sec.id = generateSectionId(); // stable id so this section can be tracked in the Section Order list even as other sections are added/removed/reordered
+    sec.centered = !!sec.centered;
+    if(sec.type !== 'table') sec.type = 'list'; // default/legacy sections are always 'list'
+    if(sec.type === 'list'){
+      if(!Array.isArray(sec.points) || sec.points.length === 0) sec.points = [''];
+    } else {
+      if(!Array.isArray(sec.columns) || sec.columns.length === 0) sec.columns = ['', ''];
+      if(!Array.isArray(sec.rows)) sec.rows = [];
+      if(sec.rows.length === 0){
+        sec.rows.push({ cells: sec.columns.map(()=>newFlexCell()) });
+      }
+      // keep every row's cell count in sync with the current column count
+      sec.rows.forEach(row=>{
+        if(!Array.isArray(row.cells)) row.cells = [];
+        while(row.cells.length < sec.columns.length) row.cells.push(newFlexCell());
+        row.cells.length = sec.columns.length;
+      });
+    }
+  }
+
+  function renderCustomSections(){
+    const container = document.getElementById('customSectionsContainer');
+    container.innerHTML = '';
+    customSections.forEach((sec, sIdx)=>{
+      normalizeCustomSection(sec);
+
+      const div = document.createElement('div');
+      div.className = 'custom-section-block';
+
+      const topRow = `
+        <div class="custom-section-top">
+          <input type="text" placeholder="Section headline, e.g. How to Fill This Form / Category Wise Vacancy" value="${escAttr(sec.headline)}" oninput="customSections[${sIdx}].headline = this.value; renderSectionOrder();">
+          <button type="button" class="remove-row-btn" onclick="removeCustomSection(${sIdx})">Remove Section</button>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8a8062;margin:-4px 0 8px;">This section's position on the page (relative to Important Dates, Fee, or any other section) is set in the <b>Section Order</b> panel near the bottom of this form.</div>
+        <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#453A24;margin-bottom:8px;">
+          <input type="checkbox" ${sec.centered ? 'checked' : ''} onchange="customSections[${sIdx}].centered = this.checked"> 🎯 Center-align this section's values on the page
+        </label>
+        <div class="custom-type-toggle">
+          <button type="button" class="${sec.type==='list'?'active':''}" onclick="setCustomSectionType(${sIdx}, 'list')">📝 List / Steps</button>
+          <button type="button" class="${sec.type==='table'?'active':''}" onclick="setCustomSectionType(${sIdx}, 'table')">▦ Flexible Table</button>
+        </div>`;
+
+      let bodyHtml = '';
+      if(sec.type === 'list'){
+        const pointLines = sec.points.map((point, pIdx) => `
+          <div class="elig-line">
+            <textarea placeholder="e.g. Visit the official website and click on 'Apply Online'"
+              oninput="customSections[${sIdx}].points[${pIdx}] = this.value; autoGrow(this);">${point || ''}</textarea>
+            ${sec.points.length > 1 ? `<button type="button" class="elig-remove" onclick="removeCustomSectionPoint(${sIdx}, ${pIdx})">✕</button>` : ''}
+          </div>
+        `).join('');
+        bodyHtml = `
+          ${pointLines}
+          <button type="button" class="add-elig-btn" onclick="addCustomSectionPoint(${sIdx})">+ Add Step</button>`;
+      } else {
+        const colChips = sec.columns.map((col, cIdx) => `
+          <div class="tbl-col-chip">
+            <input type="text" placeholder="Column name" value="${escAttr(col)}" oninput="renameTableColumn(${sIdx}, ${cIdx}, this.value)">
+            ${sec.columns.length > 1 ? `<button type="button" onclick="removeTableColumn(${sIdx}, ${cIdx})" title="Remove column">✕</button>` : ''}
+          </div>
+        `).join('');
+
+        const headerHtml = `<tr>${sec.columns.map(col => `<th>${col ? formatTextEsc(col) : '—'}</th>`).join('')}<th class="tbl-row-remove-cell"></th></tr>`;
+
+        const rowsHtml = sec.rows.map((row, rIdx) => {
+          const cellsHtml = row.cells.map((cell, cIdx) => {
+            if(cell.mergeUp || cell.mergeLeft){
+              const label = cell.mergeUp ? '↑ merged with cell above' : '← merged with cell to the left';
+              const toggle = cell.mergeUp
+                ? `<label><input type="checkbox" checked onchange="toggleCellMerge(${sIdx}, ${rIdx}, ${cIdx}, 'up', this.checked)"> Merge with cell above</label>`
+                : `<label><input type="checkbox" checked onchange="toggleCellMerge(${sIdx}, ${rIdx}, ${cIdx}, 'left', this.checked)"> Merge with cell to left</label>`;
+              return `<td>
+                <div class="tbl-cell-merged">${label}</div>
+                <div class="tbl-cell-opts">${toggle}</div>
+              </td>`;
+            }
+            return `<td>
+              <input type="text" class="tbl-cell-text" placeholder="Text" value="${escAttr(cell.text)}" oninput="updateTableCell(${sIdx}, ${rIdx}, ${cIdx}, 'text', this.value)">
+              ${cell.url !== undefined && cell.url !== null && (cell.hasLink || cell.url) ? `<input type="text" class="tbl-cell-url" placeholder="https://... (this cell becomes a clickable link)" value="${escAttr(cell.url)}" oninput="updateTableCell(${sIdx}, ${rIdx}, ${cIdx}, 'url', this.value)">` : ''}
+              <div class="tbl-cell-opts">
+                <label><input type="checkbox" ${(cell.hasLink || cell.url) ? 'checked' : ''} onchange="toggleCellLink(${sIdx}, ${rIdx}, ${cIdx}, this.checked)"> 🔗 Link</label>
+                ${rIdx > 0 ? `<label><input type="checkbox" onchange="toggleCellMerge(${sIdx}, ${rIdx}, ${cIdx}, 'up', this.checked)"> Merge with cell above</label>` : ''}
+                ${cIdx > 0 ? `<label><input type="checkbox" onchange="toggleCellMerge(${sIdx}, ${rIdx}, ${cIdx}, 'left', this.checked)"> Merge with cell to left</label>` : ''}
+              </div>
+            </td>`;
+          }).join('');
+          return `<tr>${cellsHtml}<td class="tbl-row-remove-cell"><button type="button" onclick="removeTableRow(${sIdx}, ${rIdx})" title="Remove row">✕ Row</button></td></tr>`;
+        }).join('');
+
+        bodyHtml = `
+          <div class="tbl-columns-row">
+            ${colChips}
+            <button type="button" class="tbl-add-col-btn" onclick="addTableColumn(${sIdx})">+ Add Column</button>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl-grid">
+              <thead>${headerHtml}</thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </div>
+          <button type="button" class="tbl-add-row-btn" onclick="addTableRow(${sIdx})">+ Add Row</button>`;
+      }
+
+      div.innerHTML = topRow + bodyHtml;
+      container.appendChild(div);
+    });
+    container.querySelectorAll('textarea').forEach(autoGrow);
+  }
+
+  // small helper just for previewing formatting markers (**bold** etc.) in column-name headers — safe, escapes HTML first
+  function formatTextEsc(s){
+    return escAttr(s);
+  }
+
+  function addCustomSection(){
+    const sec = { id: generateSectionId(), headline:'', type:'list', points:[''] };
+    customSections.push(sec);
+    sectionOrder.push('custom:' + sec.id); // new section starts at the bottom — drag it into place with the Section Order panel
+    renderCustomSections();
+    renderSectionOrder();
+  }
+
+  // Pre-fills a Custom Section as a flexible table with a sensible headline/columns for a
+  // common use case, so the admin doesn't have to set that up by hand each time. It's still
+  // a completely normal Custom Section afterwards — rename it, add/remove rows and columns,
+  // merge cells, or delete it like any other.
+  const CUSTOM_SECTION_TEMPLATES = {
+    physical: { headline: 'Physical Standards & Measurements', columns: ['Category / Test', 'Standard'] },
+    region:   { headline: 'Region-wise Details',               columns: ['Region / State', 'Details'] },
+    category: { headline: 'Category-wise Details',             columns: ['Category', 'Details'] },
+  };
+  function addCustomSectionTemplate(kind){
+    const tpl = CUSTOM_SECTION_TEMPLATES[kind];
+    if(!tpl) return;
+    const sec = { id: generateSectionId(), headline: tpl.headline, type: 'table', columns: tpl.columns.slice(), rows: [] };
+    normalizeCustomSection(sec);
+    customSections.push(sec);
+    sectionOrder.push('custom:' + sec.id); // starts at the bottom — drag it into place with the Section Order panel
+    renderCustomSections();
+    renderSectionOrder();
+  }
+
+  function removeCustomSection(idx){
+    const [removed] = customSections.splice(idx, 1);
+    if(removed) sectionOrder = sectionOrder.filter(k => k !== 'custom:' + removed.id);
+    renderCustomSections();
+    renderSectionOrder();
+  }
+
+  function setCustomSectionType(sIdx, type){
+    const sec = customSections[sIdx];
+    sec.type = type;
+    normalizeCustomSection(sec);
+    renderCustomSections();
+  }
+
+  function addCustomSectionPoint(sIdx){
+    customSections[sIdx].points.push('');
+    renderCustomSections();
+  }
+
+  function removeCustomSectionPoint(sIdx, pIdx){
+    customSections[sIdx].points.splice(pIdx, 1);
+    if(customSections[sIdx].points.length === 0) customSections[sIdx].points.push('');
+    renderCustomSections();
+  }
+
+  // ---- flexible table builder actions ----
+  function addTableColumn(sIdx){
+    const sec = customSections[sIdx];
+    sec.columns.push('New Column');
+    sec.rows.forEach(row => row.cells.push(newFlexCell()));
+    renderCustomSections();
+  }
+
+  function renameTableColumn(sIdx, cIdx, value){
+    customSections[sIdx].columns[cIdx] = value;
+    // no full re-render needed for a simple rename — avoids losing focus while typing
+  }
+
+  function removeTableColumn(sIdx, cIdx){
+    const sec = customSections[sIdx];
+    if(sec.columns.length <= 1) return; // always keep at least one column — use "Remove Section" to delete the whole table
+    sec.columns.splice(cIdx, 1);
+    sec.rows.forEach(row => row.cells.splice(cIdx, 1));
+    renderCustomSections();
+  }
+
+  function addTableRow(sIdx){
+    const sec = customSections[sIdx];
+    sec.rows.push({ cells: sec.columns.map(()=>newFlexCell()) });
+    renderCustomSections();
+  }
+
+  function removeTableRow(sIdx, rIdx){
+    const sec = customSections[sIdx];
+    if(sec.rows.length <= 1) return; // always keep at least one row — use "Remove Section" to delete the whole table
+    sec.rows.splice(rIdx, 1);
+    renderCustomSections();
+  }
+
+  function updateTableCell(sIdx, rIdx, cIdx, field, value){
+    customSections[sIdx].rows[rIdx].cells[cIdx][field] = value;
+    if(field === 'url') customSections[sIdx].rows[rIdx].cells[cIdx].hasLink = true;
+  }
+
+  function toggleCellLink(sIdx, rIdx, cIdx, checked){
+    const cell = customSections[sIdx].rows[rIdx].cells[cIdx];
+    cell.hasLink = checked;
+    if(!checked) cell.url = '';
+    renderCustomSections();
+  }
+
+  function toggleCellMerge(sIdx, rIdx, cIdx, direction, checked){
+    const cell = customSections[sIdx].rows[rIdx].cells[cIdx];
+    if(direction === 'up'){
+      if(rIdx === 0) return; // first row can never merge upward — there's nothing above it
+      cell.mergeUp = checked;
+      if(checked) cell.mergeLeft = false; // a cell merges in only one direction at a time
+    } else {
+      if(cIdx === 0) return; // first column can never merge leftward — there's nothing to its left
+      cell.mergeLeft = checked;
+      if(checked) cell.mergeUp = false;
+    }
+    renderCustomSections();
+  }
+
+  // ---- Section order: every section on the page — fixed ones (Dates, Fee, Age, etc.) AND each ----
+  // ---- individual Custom Section — lives in this one list, so anything can go anywhere ----
+  const SECTION_LABELS = {
+    description: 'Description',
+    vacancy: 'Vacancy Details',
+    dates: 'Important Dates',
+    fees: 'Application Fee',
+    age: 'Age Limit',
+    physical: 'Physical Standards & Measurements',
+    region: 'Region-wise Details',
+    category: 'Category-wise Details',
+    links: 'Links / Apply Buttons',
+  };
+  const DEFAULT_SECTION_ORDER = ['description','dates','fees','age','vacancy','links'];
+
+  let sectionOrder = [...DEFAULT_SECTION_ORDER];
+
+  // keeps sectionOrder in sync with the current customSections list: expands the old single
+  // 'custom' slot (from listings saved before this feature) into one entry per section, drops
+  // entries for sections that were removed, and appends entries for newly-added sections
+  function syncSectionOrderWithCustomSections(){
+    const currentKeys = customSections.map(s => 'custom:' + s.id);
+    const legacyIdx = sectionOrder.indexOf('custom');
+    if(legacyIdx !== -1) sectionOrder.splice(legacyIdx, 1, ...currentKeys);
+    sectionOrder = sectionOrder.filter(k => !k.startsWith('custom:') || currentKeys.includes(k));
+    currentKeys.forEach(k => { if(!sectionOrder.includes(k)) sectionOrder.push(k); });
+  }
+
+  function sectionOrderLabel(key){
+    if(key.startsWith('custom:')){
+      const id = key.slice(7);
+      const n = customSections.findIndex(s => s.id === id) + 1;
+      const sec = customSections.find(s => s.id === id);
+      return `Custom Section${n > 0 ? ' ' + n : ''}${sec && sec.headline ? ' — ' + sec.headline : ' (untitled)'}`;
+    }
+    return SECTION_LABELS[key] || key;
+  }
+
+  function renderSectionOrder(){
+    const container = document.getElementById('sectionOrderContainer');
+    container.innerHTML = '';
+    sectionOrder.forEach((key, idx)=>{
+      const div = document.createElement('div');
+      div.className = 'order-row';
+      div.innerHTML = `
+        <span class="order-label">${idx+1}. ${sectionOrderLabel(key)}</span>
+        <div class="order-btns">
+          <button type="button" onclick="moveSectionOrder(${idx}, -1)" ${idx===0 ? 'disabled' : ''}>↑</button>
+          <button type="button" onclick="moveSectionOrder(${idx}, 1)" ${idx===sectionOrder.length-1 ? 'disabled' : ''}>↓</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function moveSectionOrder(idx, dir){
+    const newIdx = idx + dir;
+    if(newIdx < 0 || newIdx >= sectionOrder.length) return;
+    [sectionOrder[idx], sectionOrder[newIdx]] = [sectionOrder[newIdx], sectionOrder[idx]];
+    renderSectionOrder();
+  }
+
+
+  // ---- dynamic links (any number, any label) ----
+  let linkRows = [];
+  const STORAGE_BUCKET = 'notices'; // must match the Supabase Storage bucket name and the _redirects proxy path
+
+  function renderLinkRows(){
+    const container = document.getElementById('linkRowsContainer');
+    container.innerHTML = '';
+    linkRows.forEach((row, idx)=>{
+      const div = document.createElement('div');
+      div.className = 'link-row-wrap';
+      div.innerHTML = `
+        <div class="link-row">
+          <input type="text" placeholder="Link label, e.g. Apply Online / Download Notification" value="${row.label || ''}" oninput="linkRows[${idx}].label = this.value">
+          <input type="text" placeholder="https://... or /notices/file.pdf" value="${row.url || ''}" oninput="linkRows[${idx}].url = this.value" id="linkUrlInput_${idx}">
+          <div class="link-row-btns">
+            <button type="button" class="link-move-btn" title="Move up" onclick="moveLinkRow(${idx},-1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+            <button type="button" class="link-move-btn" title="Move down" onclick="moveLinkRow(${idx},1)" ${idx === linkRows.length - 1 ? 'disabled' : ''}>▼</button>
+            <button type="button" class="link-remove" onclick="removeLinkRow(${idx})">✕</button>
+          </div>
+        </div>
+        <div class="link-upload-row">
+          <label class="upload-btn">
+            📎 Upload File
+            <input type="file" accept="application/pdf,image/*" style="display:none;" onchange="uploadLinkFile(${idx}, this)">
+          </label>
+          <span class="upload-status" id="uploadStatus_${idx}"></span>
+          <label class="link-blink-toggle">
+            <input type="checkbox" ${row.blink ? 'checked' : ''} onchange="linkRows[${idx}].blink = this.checked">
+            Make this button blink (draws attention)
+          </label>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addLinkRow(){
+    linkRows.push({label:'', url:'', blink:false});
+    renderLinkRows();
+  }
+
+  function removeLinkRow(idx){
+    linkRows.splice(idx, 1);
+    renderLinkRows();
+  }
+
+  function moveLinkRow(idx, dir){
+    const newIdx = idx + dir;
+    if(newIdx < 0 || newIdx >= linkRows.length) return;
+    [linkRows[idx], linkRows[newIdx]] = [linkRows[newIdx], linkRows[idx]];
+    renderLinkRows();
+  }
+
+  function setUploadStatus(idx, text, cls){
+    const el = document.getElementById('uploadStatus_' + idx);
+    if(!el) return;
+    el.textContent = text;
+    el.className = 'upload-status' + (cls ? ' ' + cls : '');
+  }
+
+  async function uploadLinkFile(idx, inputEl){
+    const file = inputEl.files && inputEl.files[0];
+    if(!file) return;
+
+    if(file.size > 20 * 1024 * 1024){
+      setUploadStatus(idx, 'File too large — max 20MB.', 'err');
+      inputEl.value = '';
+      return;
+    }
+
+    setUploadStatus(idx, 'Uploading "' + file.name + '"…');
+
+    // unique, URL-safe filename so uploads never collide or overwrite each other
+    const safeName = file.name.trim().toLowerCase().replace(/[^a-z0-9.\-]+/g, '-').replace(/-+/g, '-');
+    const path = Date.now() + '-' + safeName;
+
+    const { error } = await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type || 'application/octet-stream',
+    });
+
+    if(error){
+      setUploadStatus(idx, 'Upload failed: ' + error.message, 'err');
+      showToast('File upload failed: ' + error.message);
+      inputEl.value = '';
+      return;
+    }
+
+    linkRows[idx].url = '/notices/' + path;
+    if(!linkRows[idx].label){
+      linkRows[idx].label = 'Download PDF';
+    }
+
+    renderLinkRows();
+    setUploadStatus(idx, 'Uploaded: ' + file.name, 'ok');
+    showToast('File uploaded — link filled in automatically. Remember to save the listing.');
+  }
+
+  // ---- Share Poster (single image shown at the end of the post) ----
+  function posterUrlChanged(){
+    const url = document.getElementById('f_poster_url').value.trim();
+    const preview = document.getElementById('posterPreview');
+    if(url){
+      preview.src = url;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+      preview.src = '';
+    }
+  }
+
+  async function uploadPosterFile(inputEl){
+    const file = inputEl.files && inputEl.files[0];
+    if(!file) return;
+
+    if(file.size > 20 * 1024 * 1024){
+      document.getElementById('posterUploadStatus').textContent = 'File too large — max 20MB.';
+      document.getElementById('posterUploadStatus').className = 'upload-status err';
+      inputEl.value = '';
+      return;
+    }
+
+    document.getElementById('posterUploadStatus').textContent = 'Uploading "' + file.name + '"…';
+    document.getElementById('posterUploadStatus').className = 'upload-status';
+
+    const safeName = file.name.trim().toLowerCase().replace(/[^a-z0-9.\-]+/g, '-').replace(/-+/g, '-');
+    const path = 'posters/' + Date.now() + '-' + safeName;
+
+    const { error } = await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type || 'image/jpeg',
+    });
+
+    if(error){
+      document.getElementById('posterUploadStatus').textContent = 'Upload failed: ' + error.message;
+      document.getElementById('posterUploadStatus').className = 'upload-status err';
+      showToast('Poster upload failed: ' + error.message);
+      inputEl.value = '';
+      return;
+    }
+
+    document.getElementById('f_poster_url').value = '/notices/' + path;
+    posterUrlChanged();
+    document.getElementById('posterUploadStatus').textContent = 'Uploaded: ' + file.name;
+    document.getElementById('posterUploadStatus').className = 'upload-status ok';
+    showToast('Poster uploaded — remember to save the listing.');
+  }
+
+  // ---- vacancy rows (dynamic add/remove) ----
+  // ---- Vacancy Details: grouped by (optional) branch, each holding one or more posts. ----
+  // ---- A group can share ONE eligibility list across all its posts, or let each post have its own ----
+  // ---- (with a one-click "copy from post above" for the partly-shared case). ----
+  let vacancyRows = []; // array of groups: {id, branch, mode:'individual'|'shared', shared_eligibility:[], items:[{post,posts,last_date_apply,last_date_fee,eligibility:[]}]}
+
+  function makeVacancyPost(){
+    return { post:'', posts:'', last_date_apply:'', last_date_fee:'', eligibility:[''] };
+  }
+  function makeVacancyGroup(){
+    return { id: generateSectionId(), branch:'', mode:'individual', shared_eligibility:[''], items:[ makeVacancyPost() ] };
+  }
+
+  // converts old data (a flat list where every post was its own independent row, each retyping
+  // its own branch) into the new grouped shape — consecutive rows that share the same branch text
+  // become one group with multiple posts, so nothing is lost and old listings look right immediately
+  function migrateVacancyRows(raw){
+    if(!Array.isArray(raw) || raw.length === 0) return [];
+    if(raw.every(r => Array.isArray(r.items))) return raw; // already in the new shape
+
+    const groups = [];
+    raw.forEach(r => {
+      const branch = (r.branch || '').trim();
+      const item = {
+        post: r.post || '', posts: r.posts || '',
+        last_date_apply: r.last_date_apply || '', last_date_fee: r.last_date_fee || '',
+        eligibility: Array.isArray(r.eligibility) && r.eligibility.length > 0 ? r.eligibility.slice() : [''],
+      };
+      const last = groups[groups.length - 1];
+      if(last && (last.branch || '') === branch){
+        last.items.push(item);
+      } else {
+        groups.push({ id: generateSectionId(), branch, mode:'individual', shared_eligibility:[''], items:[item] });
+      }
+    });
+    return groups;
+  }
+
+  function normalizeVacancyGroup(g){
+    if(!g.id) g.id = generateSectionId();
+    if(g.mode !== 'shared') g.mode = 'individual';
+    if(!Array.isArray(g.items) || g.items.length === 0) g.items = [makeVacancyPost()];
+    g.items.forEach(it => {
+      if(!Array.isArray(it.eligibility)){
+        it.eligibility = (it.eligibility || '').split('\n').map(s=>s.trim()).filter(Boolean);
+      }
+      if(it.eligibility.length === 0) it.eligibility = [''];
+    });
+    if(!Array.isArray(g.shared_eligibility)){
+      g.shared_eligibility = (g.shared_eligibility || '').split('\n').map(s=>s.trim()).filter(Boolean);
+    }
+    if(g.shared_eligibility.length === 0) g.shared_eligibility = [''];
+  }
+
+  function renderVacancyRows(){
+    const container = document.getElementById('vacancyRowsContainer');
+    container.innerHTML = '';
+    vacancyRows.forEach((g, gIdx)=>{
+      normalizeVacancyGroup(g);
+
+      const sharedEligHtml = g.mode === 'shared' ? `
+        <div class="shared-elig-box">
+          <div class="elig-hint">🔗 One eligibility list, shared by every post in this group:</div>
+          <div class="elig-list">
+            ${g.shared_eligibility.map((crit, cIdx) => `
+              <div class="elig-line">
+                <textarea placeholder="e.g. Bachelor's degree in any discipline"
+                  oninput="vacancyRows[${gIdx}].shared_eligibility[${cIdx}] = this.value; autoGrow(this);">${crit || ''}</textarea>
+                ${g.shared_eligibility.length > 1 ? `<button type="button" class="elig-remove" onclick="removeSharedEligibility(${gIdx}, ${cIdx})">✕</button>` : ''}
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" class="add-elig-btn" onclick="addSharedEligibility(${gIdx})">+ Add More Eligibility Criteria</button>
+        </div>` : '';
+
+      const itemsHtml = g.items.map((it, iIdx) => {
+        const individualEligHtml = g.mode === 'individual' ? `
+          <div class="elig-list">
+            ${it.eligibility.map((crit, cIdx) => `
+              <div class="elig-line">
+                <textarea placeholder="e.g. Bachelor's degree in any discipline"
+                  oninput="vacancyRows[${gIdx}].items[${iIdx}].eligibility[${cIdx}] = this.value; autoGrow(this);">${crit || ''}</textarea>
+                ${it.eligibility.length > 1 ? `<button type="button" class="elig-remove" onclick="removeItemEligibility(${gIdx}, ${iIdx}, ${cIdx})">✕</button>` : ''}
+              </div>
+            `).join('')}
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:2px;">
+            <button type="button" class="add-elig-btn" onclick="addItemEligibility(${gIdx}, ${iIdx})">+ Add More Eligibility Criteria</button>
+            ${iIdx > 0 ? `<button type="button" class="post-copy-btn" onclick="copyEligibilityFromPrevious(${gIdx}, ${iIdx})">📋 Copy eligibility from post above</button>` : ''}
+          </div>` : '';
+
+        return `
+          <div class="post-sub-block">
+            <div class="vacancy-top-row">
+              <input type="text" placeholder="Post Name" value="${escAttr(it.post)}" oninput="vacancyRows[${gIdx}].items[${iIdx}].post = this.value">
+              <input type="text" placeholder="Total Posts" value="${escAttr(it.posts)}" oninput="vacancyRows[${gIdx}].items[${iIdx}].posts = this.value">
+              ${g.items.length > 1 ? `<button type="button" class="remove-row-btn" onclick="removeVacancyItem(${gIdx}, ${iIdx})">Remove Post</button>` : ''}
+            </div>
+            <div class="region-date-line" style="margin-bottom:${g.mode === 'individual' ? '10px' : '0'};">
+              <input type="text" placeholder="Last Date to Apply (optional — leave blank to hide this row's deadline)" value="${escAttr(it.last_date_apply)}" oninput="vacancyRows[${gIdx}].items[${iIdx}].last_date_apply = this.value">
+              <input type="text" placeholder="Last Date — Fee (optional — leave blank to hide this row's deadline)" value="${escAttr(it.last_date_fee)}" oninput="vacancyRows[${gIdx}].items[${iIdx}].last_date_fee = this.value">
+            </div>
+            ${individualEligHtml}
+          </div>`;
+      }).join('');
+
+      const div = document.createElement('div');
+      div.className = 'vacancy-row-block';
+      div.innerHTML = `
+        <div class="vacancy-group-top">
+          <input type="text" placeholder="Branch (optional — e.g. IT / Finance / Operations — leave blank for a plain list, no branch column)" value="${escAttr(g.branch)}" oninput="vacancyRows[${gIdx}].branch = this.value">
+          <button type="button" class="remove-row-btn" onclick="removeVacancyGroup(${gIdx})">Remove Group</button>
+        </div>
+        <div class="elig-mode-toggle">
+          <button type="button" class="${g.mode==='individual'?'active':''}" onclick="setVacancyEligMode(${gIdx}, 'individual')">Different eligibility per post</button>
+          <button type="button" class="${g.mode==='shared'?'active':''}" onclick="setVacancyEligMode(${gIdx}, 'shared')">🔗 Same eligibility for all posts here</button>
+        </div>
+        ${sharedEligHtml}
+        ${itemsHtml}
+        <button type="button" class="tbl-add-row-btn" onclick="addVacancyItem(${gIdx})">+ Add Post to this Group</button>
+      `;
+      container.appendChild(div);
+    });
+
+    container.querySelectorAll('.elig-line textarea').forEach(autoGrow);
+  }
+
+  function autoGrow(el){
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  function addVacancyGroup(){
+    vacancyRows.push(makeVacancyGroup());
+    renderVacancyRows();
+  }
+
+  function removeVacancyGroup(gIdx){
+    vacancyRows.splice(gIdx, 1);
+    renderVacancyRows();
+  }
+
+  function setVacancyEligMode(gIdx, mode){
+    vacancyRows[gIdx].mode = mode;
+    renderVacancyRows();
+  }
+
+  function addVacancyItem(gIdx){
+    vacancyRows[gIdx].items.push(makeVacancyPost());
+    renderVacancyRows();
+  }
+
+  function removeVacancyItem(gIdx, iIdx){
+    const items = vacancyRows[gIdx].items;
+    if(items.length <= 1) return; // last post in a group — use "Remove Group" instead
+    items.splice(iIdx, 1);
+    renderVacancyRows();
+  }
+
+  function addItemEligibility(gIdx, iIdx){
+    vacancyRows[gIdx].items[iIdx].eligibility.push('');
+    renderVacancyRows();
+  }
+
+  function removeItemEligibility(gIdx, iIdx, cIdx){
+    const arr = vacancyRows[gIdx].items[iIdx].eligibility;
+    arr.splice(cIdx, 1);
+    if(arr.length === 0) arr.push('');
+    renderVacancyRows();
+  }
+
+  function addSharedEligibility(gIdx){
+    vacancyRows[gIdx].shared_eligibility.push('');
+    renderVacancyRows();
+  }
+
+  function removeSharedEligibility(gIdx, cIdx){
+    const arr = vacancyRows[gIdx].shared_eligibility;
+    arr.splice(cIdx, 1);
+    if(arr.length === 0) arr.push('');
+    renderVacancyRows();
+  }
+
+  // clones the eligibility list from the post directly above — for the "some posts share it, some
+  // don't" case: copy, then just tweak the couple of lines that differ for this particular post
+  function copyEligibilityFromPrevious(gIdx, iIdx){
+    if(iIdx <= 0) return;
+    vacancyRows[gIdx].items[iIdx].eligibility = vacancyRows[gIdx].items[iIdx - 1].eligibility.slice();
+    renderVacancyRows();
+  }
+
+  async function loadListings(){
+    const { data, error } = await sb
+      .from('listings')
+      .select('*')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+
+    if(error){
+      showToast('Could not load listings: ' + error.message);
+      return;
+    }
+
+    LISTINGS = data.map(row => ({
+      id: row.id, cat: row.category, tag: row.tag || '',
+      closing_date: row.closing_date || '', opening_date: row.opening_date || '', auto_badge: !!row.auto_badge,
+      title: row.title, dept: row.dept, date: row.date_text, ref: row.ref,
+      total_post: row.total_post || '', created_at: row.created_at, updated_at: row.updated_at || null,
+      status: row.status || 'published',
+      created_by: row.created_by || null,
+      description: row.description || '',
+      links: Array.isArray(row.links) && row.links.length > 0
+        ? row.links
+        : [row.apply_link, row.notification_link, row.official_link]
+            .map((url, i) => url ? {label: ['Apply Online','Download Notification','Official Website'][i], url} : null)
+            .filter(Boolean),
+      important_dates: isFlexTableShape(row.important_dates)
+        ? row.important_dates
+        : legacyRowsToTable(
+            Array.isArray(row.important_dates) && row.important_dates.length > 0
+              ? row.important_dates
+              : [
+                  ['Notification Out Date', row.notification_date],
+                  ['Application Start Date', row.app_start_date],
+                  ['Last Date to Apply', row.last_date_apply],
+                  ['Last Date — Fee Submission', row.last_date_fee],
+                  ['Correction Window Last Date', row.correction_last_date],
+                  ['Application Status Available', row.status_date],
+                  ['Exam Date', row.exam_date],
+                  ['Admit Card', row.admit_card_date],
+                  ['Result Date', row.result_date],
+                ].filter(([,v]) => v).map(([label,value]) => ({label, value})),
+            ['Field', 'Date / Value']
+          ),
+      application_fees: isFlexTableShape(row.application_fees)
+        ? row.application_fees
+        : legacyRowsToTable(
+            Array.isArray(row.application_fees) && row.application_fees.length > 0
+              ? row.application_fees
+              : [
+                  ['General / OBC / EWS', row.fee_gen_obc_ews],
+                  ['SC / ST / PH (Divyang) / EBC', row.fee_sc_st_ph_ebc],
+                  ['All Category — Female', row.fee_female],
+                  ['Payment Modes', row.fee_payment_modes],
+                  ['Refund Policy', row.fee_refund],
+                ].filter(([,v]) => v).map(([label,value]) => ({label, value})),
+            ['Field', 'Amount']
+          ),
+      age_details: isFlexTableShape(row.age_details)
+        ? row.age_details
+        : legacyRowsToTable(
+            Array.isArray(row.age_details) && row.age_details.length > 0
+              ? row.age_details
+              : [
+                  ['Minimum Age', row.age_min],
+                  ['Maximum Age', row.age_max],
+                  ['Age Relaxation', row.age_relaxation],
+                ].filter(([,v]) => v).map(([label,value]) => ({label, value})),
+            ['Field', 'Value']
+          ),
+      physical_details: row.physical_details || [],
+      vacancy_details: row.vacancy_details || [],
+      region_dates: row.region_dates || [],
+      category_details: row.category_details || [],
+      custom_sections: Array.isArray(row.custom_sections) && row.custom_sections.length > 0
+        ? row.custom_sections
+        : (row.how_to_fill && (row.how_to_fill.headline || (row.how_to_fill.points || []).length > 0)
+            ? [{ headline: row.how_to_fill.headline || '', points: row.how_to_fill.points || [] }]
+            : []),
+      section_order: Array.isArray(row.section_order) && row.section_order.length > 0 ? row.section_order : null,
+      section_titles: row.section_titles || {},
+    }));
+    renderTable();
+  }
+
+  let tableVisibleCount = 10;
+  const TABLE_PAGE_SIZE = 10;
+
+  function renderTable(){
+    const body = document.getElementById('tableBody');
+    const empty = document.getElementById('emptyNote');
+    const seeMoreWrap = document.getElementById('tableSeeMoreWrap');
+    body.innerHTML = '';
+
+    const term = (document.getElementById('tableSearchInput')?.value || '').toLowerCase().trim();
+    const catFilter = document.getElementById('tableCatFilter')?.value || 'all';
+    const statusFilter = document.getElementById('tableStatusFilter')?.value || 'all';
+    let filtered = LISTINGS;
+    if(term){
+      filtered = filtered.filter(item =>
+        (item.title || '').toLowerCase().includes(term) ||
+        (item.dept || '').toLowerCase().includes(term) ||
+        (item.ref || '').toLowerCase().includes(term)
+      );
+    }
+    if(catFilter !== 'all'){
+      filtered = filtered.filter(item => item.cat === catFilter);
+    }
+    if(statusFilter !== 'all'){
+      filtered = filtered.filter(item => item.status === statusFilter);
+    }
+
+    // When a single category is selected, group is moot (every row already shares
+    // one category) — so just sort newest-first. When "All Categories" is selected,
+    // sort newest-first across ALL categories too (not grouped by category first) —
+    // otherwise, with only 10 rows shown per page, a category with many listings
+    // (e.g. Latest Job) fills the entire first page and every other category looks
+    // like it's missing, even though "All Categories" is correctly selected.
+    // "Newest" here means most-recently-created OR most-recently-edited, whichever is
+    // later — so editing an old listing brings it back to the top, same as a fresh add.
+    filtered = [...filtered].sort((a, b) => {
+      const aTime = new Date(a.updated_at || a.created_at || 0);
+      const bTime = new Date(b.updated_at || b.created_at || 0);
+      return bTime - aTime;
+    });
+
+    document.getElementById('countBadge').textContent = filtered.length + ' items';
+
+    if(filtered.length === 0){
+      empty.style.display = 'block';
+      seeMoreWrap.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+
+    const toShow = filtered.slice(0, tableVisibleCount);
+
+    toShow.forEach(item=>{
+      const isOwner = item.created_by && item.created_by === currentUserId;
+      const canEdit = currentUserRole === 'admin' || isOwner;
+      const canDelete = currentUserRole === 'admin';
+
+      const displayTag = effectiveTag(item.tag, item.created_at, item.closing_date, item.opening_date, item.auto_badge);
+      const displayTagColor = tagColorFor(displayTag);
+      const draftBadge = item.status === 'draft' ? `<span class="badge" style="border-color:#8a8062;color:#8a8062;">DRAFT</span> ` : '';
+      const badgeCell = draftBadge + (displayTag
+        ? `<span class="badge ${displayTagColor!=='red' ? displayTagColor : ''}">${displayTag}</span>`
+        : (item.tag ? `<span class="badge" style="opacity:.5;" title="NEW badges auto-hide after ${NEW_BADGE_DAYS} days — this one no longer shows on the live site">${item.tag} (expired)</span>` : (draftBadge ? '' : '—')));
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="cat-tag">${catLabels[item.cat]}</span></td>
+        <td>
+          <div class="row-title">${item.title}</div>
+          <div class="row-meta">${item.dept}${item.total_post ? ' · ' + item.total_post + ' posts' : ''} · ${item.date} · ${item.ref}</div>
+        </td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#453A24;">${posterLabel(item.created_by)}</td>
+        <td>${badgeCell}</td>
+        <td>
+          <div class="row-actions">
+            ${canEdit ? `<button class="edit" onclick="startEdit(${item.id})">Edit</button>` : `<span class="perm-note">View only</span>`}
+            <button class="copy" onclick="copyListing(${item.id})">Copy</button>
+            ${canDelete ? `<button class="del" onclick="deleteListing(${item.id})">Delete</button>` : ''}
+          </div>
+        </td>`;
+      body.appendChild(tr);
+    });
+
+    if(filtered.length > tableVisibleCount){
+      seeMoreWrap.style.display = 'block';
+      document.getElementById('tableSeeMoreBtn').textContent = `See More (${filtered.length - tableVisibleCount} remaining)`;
+    } else {
+      seeMoreWrap.style.display = 'none';
+    }
+  }
+
+  function showMoreTableRows(){
+    tableVisibleCount += TABLE_PAGE_SIZE;
+    renderTable();
+  }
+
+  // Builds the same object shape that gets saved to Supabase, straight from the current
+  // form fields — used both when actually saving and when previewing unsaved changes.
+  function buildListingPayload(status){
+    const category = document.getElementById('f_cat').value;
+    const title = document.getElementById('f_title').value.trim();
+    const dept = document.getElementById('f_dept').value.trim();
+    const date_text = document.getElementById('f_date').value.trim();
+    const ref = document.getElementById('f_ref').value.trim();
+    const total_post = document.getElementById('f_total_post').value.trim();
+    const tag = document.getElementById('f_tag').value || null;
+    const closing_date = document.getElementById('f_closing_date').value || null;
+    const opening_date = document.getElementById('f_opening_date').value || null;
+    const auto_badge = document.getElementById('f_auto_badge').checked;
+    const description = document.getElementById('f_desc').value.trim();
+    const poster_url = document.getElementById('f_poster_url').value.trim();
+
+    // section title overrides — any left blank simply fall back to the default label on the page
+    const section_titles = {
+      dates: document.getElementById('f_title_dates').value.trim(),
+      fees: document.getElementById('f_title_fees').value.trim(),
+      age: document.getElementById('f_title_age').value.trim(),
+      vacancy: document.getElementById('f_title_vacancy').value.trim(),
+      links: document.getElementById('f_title_links').value.trim(),
+    };
+
+    const links = linkRows
+      .map(r => ({ label: (r.label || '').trim(), url: (r.url || '').trim(), blink: !!r.blink }))
+      .filter(r => r.label || r.url);
+
+    return {
+      category, title, dept, date_text, ref, total_post, tag, closing_date, opening_date, auto_badge, description, poster_url, links, status,
+      important_dates: buildFlexTablePayload(dateTable),
+      application_fees: buildFlexTablePayload(feeTable),
+      age_details: buildFlexTablePayload(ageTable),
+      physical_details: physicalRows
+        .map(r => ({
+          group_name: (r.group_name || '').trim(),
+          fields: (r.fields || [])
+            .map(f => ({ label: (f.label || '').trim(), value: (f.value || '').trim() }))
+            .filter(f => f.label || f.value),
+        }))
+        .filter(r => r.group_name || r.fields.length > 0),
+      vacancy_details: vacancyRows
+        .map(g => ({
+          id: g.id,
+          branch: (g.branch || '').trim(),
+          mode: g.mode === 'shared' ? 'shared' : 'individual',
+          shared_eligibility: (g.shared_eligibility || []).map(e => (e || '').trim()).filter(Boolean),
+          items: (g.items || [])
+            .map(it => ({
+              post: (it.post || '').trim(),
+              posts: (it.posts || '').trim(),
+              last_date_apply: (it.last_date_apply || '').trim(),
+              last_date_fee: (it.last_date_fee || '').trim(),
+              eligibility: (it.eligibility || []).map(e => (e || '').trim()).filter(Boolean),
+            }))
+            .filter(it => it.post || it.posts || it.eligibility.length > 0 || it.last_date_apply || it.last_date_fee),
+        }))
+        .filter(g => g.branch || g.items.length > 0 || g.shared_eligibility.length > 0),
+      region_dates: regionRows
+        .map(r => ({
+          region: (r.region || '').trim(),
+          dates: (r.dates || [])
+            .map(d => ({ label: (d.label || '').trim(), value: (d.value || '').trim() }))
+            .filter(d => d.label || d.value),
+          vacancy: (r.vacancy || [])
+            .map(v => ({ post: (v.post || '').trim(), posts: (v.posts || '').trim() }))
+            .filter(v => v.post || v.posts),
+        }))
+        .filter(r => r.region || r.dates.length > 0 || r.vacancy.length > 0),
+      category_details: categoryRows
+        .map(r => ({
+          category: (r.category || '').trim(),
+          dates: (r.dates || [])
+            .map(d => ({ label: (d.label || '').trim(), value: (d.value || '').trim() }))
+            .filter(d => d.label || d.value),
+          vacancy: (r.vacancy || [])
+            .map(v => ({ post: (v.post || '').trim(), posts: (v.posts || '').trim() }))
+            .filter(v => v.post || v.posts),
+        }))
+        .filter(r => r.category || r.dates.length > 0 || r.vacancy.length > 0),
+      custom_sections: customSections
+        .map(sec => {
+          if(sec.type === 'table'){
+            const columns = (sec.columns || []).map(c => (c || '').trim());
+            const rows = (sec.rows || [])
+              .map(r => ({
+                cells: (r.cells || []).map(c => ({
+                  text: (c.text || '').trim(),
+                  url: (c.hasLink || c.url) ? (c.url || '').trim() : '',
+                  mergeUp: !!c.mergeUp,
+                  mergeLeft: !!c.mergeLeft,
+                })),
+              }))
+              // keep a row if any cell has text/url, OR if it's a merged row (merged cells carry no text of their own)
+              .filter(r => r.cells.some(c => c.text || c.url || c.mergeUp || c.mergeLeft));
+            return { id: sec.id, headline: (sec.headline || '').trim(), type: 'table', centered: !!sec.centered, columns, rows };
+          }
+          return {
+            id: sec.id,
+            headline: (sec.headline || '').trim(),
+            type: 'list',
+            centered: !!sec.centered,
+            points: (sec.points || []).map(p => (p || '').trim()).filter(Boolean),
+          };
+        })
+        .filter(sec => sec.headline || (sec.type === 'table' ? sec.rows.length > 0 : sec.points.length > 0)),
+      section_titles,
+      section_order: sectionOrder,
+    };
+  }
+
+  function previewListing(){
+    const title = document.getElementById('f_title').value.trim();
+    if(!title){
+      showToast('Add at least a title before previewing.');
+      return;
+    }
+    const payload = buildListingPayload('draft');
+    payload.id = editingId || 'preview';
+    try{
+      sessionStorage.setItem('sd_preview_listing', JSON.stringify(payload));
+    } catch(e){
+      showToast('Could not open preview: ' + e.message);
+      return;
+    }
+    window.open('sarkaridisha-detail.html?preview=1', '_blank');
+  }
+
+  // Shows/clears a red inline error message directly under a given field.
+  // fieldId is the id of the surrounding .field wrapper (e.g. "fieldwrap_f_title"),
+  // inputId is the id of the input/select/textarea itself (e.g. "f_title").
+  function showFieldError(fieldId, inputId, message){
+    const wrap = document.getElementById(fieldId);
+    const errEl = document.getElementById('err_' + inputId);
+    if(wrap) wrap.classList.add('has-error');
+    if(errEl && message) errEl.textContent = message;
+  }
+  function clearFieldError(fieldId){
+    const wrap = document.getElementById(fieldId);
+    if(wrap) wrap.classList.remove('has-error');
+  }
+  // Clears an inline error the moment the user starts fixing that field.
+  function wireInlineErrorClear(inputId, fieldId){
+    const el = document.getElementById(inputId);
+    if(!el) return;
+    el.addEventListener('input', () => {
+      if(el.value.trim()) clearFieldError(fieldId);
+    });
+  }
+  wireInlineErrorClear('f_title', 'fieldwrap_f_title');
+  wireInlineErrorClear('f_dept', 'fieldwrap_f_dept');
+  wireInlineErrorClear('f_desc', 'fieldwrap_f_desc');
+
+  // Required fields for a listing you're about to publish. Drafts are just for saving
+  // progress, so they only require a Title (so you can find them again later).
+  function validateListingForm(isDraft){
+    const requiredFields = isDraft
+      ? [{ input: 'f_title', field: 'fieldwrap_f_title', label: 'Title' }]
+      : [
+          { input: 'f_title', field: 'fieldwrap_f_title', label: 'Title' },
+          { input: 'f_dept',  field: 'fieldwrap_f_dept',  label: 'Department' },
+          { input: 'f_desc',  field: 'fieldwrap_f_desc',  label: 'Description' },
+        ];
+
+    let firstInvalidField = null;
+    requiredFields.forEach(({ input, field, label }) => {
+      const val = document.getElementById(input).value.trim();
+      if(!val){
+        showFieldError(field, input, `${label} is required.`);
+        if(!firstInvalidField) firstInvalidField = field;
+      } else {
+        clearFieldError(field);
+      }
+    });
+
+    if(firstInvalidField){
+      document.getElementById(firstInvalidField).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    }
+    return true;
+  }
+
+  async function saveListing(isDraft){
+    const title = document.getElementById('f_title').value.trim();
+    const dept = document.getElementById('f_dept').value.trim();
+    const status = isDraft ? 'draft' : 'published';
+
+    if(!validateListingForm(isDraft)){
+      showToast('Please fill in the required fields highlighted in red below.');
+      return;
+    }
+
+    const actionLabel = isDraft
+      ? 'save this as a Draft'
+      : (editingId !== null ? 'save your changes to this listing' : 'publish this new listing');
+    const confirmed = confirm(`Are you sure you want to ${actionLabel}?`);
+    if(!confirmed) return;
+
+    const payload = buildListingPayload(status);
+
+    if(editingId !== null){
+      const { error } = await sb
+        .from('listings')
+        .update({ ...payload, updated_at: new Date().toISOString() })
+        .eq('id', editingId);
+
+      if(error){ showToast('Update failed: ' + error.message); return; }
+      clearAutosaveRecord();
+      showToast(isDraft ? 'Draft saved.' : 'Listing updated and published.');
+      cancelEdit();
+    } else {
+      const { error } = await sb
+        .from('listings')
+        .insert({ ...payload, created_by: currentUserId });
+
+      if(error){ showToast('Add failed: ' + error.message); return; }
+      clearAutosaveRecord();
+      showToast(isDraft ? 'Draft saved — find it later under the "Drafts" filter.' : 'Listing added and published.');
+      clearForm();
+    }
+    loadListings();
+  }
+
+  // Fills every form field + rebuilds every dynamic table/section from a saved listing OR a
+  // buildListingPayload()-shaped object (they use slightly different key names for two fields —
+  // 'cat'/'category' and 'date'/'date_text' — so both are accepted here). Shared by editing an
+  // existing listing, duplicating one, and restoring an autosaved backup.
+  function populateFormFromPayload(item){
+    document.getElementById('f_cat').value = item.cat ?? item.category ?? '';
+    document.getElementById('f_title').value = item.title || '';
+    document.getElementById('f_dept').value = item.dept || '';
+    document.getElementById('f_date').value = item.date ?? item.date_text ?? '';
+    document.getElementById('f_ref').value = item.ref || '';
+    document.getElementById('f_total_post').value = item.total_post || '';
+    document.getElementById('f_tag').value = item.tag || '';
+    document.getElementById('f_opening_date').value = item.opening_date || '';
+    document.getElementById('f_closing_date').value = item.closing_date || '';
+    document.getElementById('f_auto_badge').checked = !!item.auto_badge;
+    document.getElementById('f_desc').value = item.description || '';
+    document.getElementById('f_poster_url').value = item.poster_url || ''; posterUrlChanged();
+    const st = item.section_titles || {};
+    document.getElementById('f_title_dates').value = st.dates || '';
+    document.getElementById('f_title_fees').value = st.fees || '';
+    document.getElementById('f_title_age').value = st.age || '';
+    document.getElementById('f_title_vacancy').value = st.vacancy || '';
+    document.getElementById('f_title_links').value = st.links || '';
+    linkRows = Array.isArray(item.links) ? JSON.parse(JSON.stringify(item.links)) : [];
+    renderLinkRows();
+
+    dateTable = isFlexTableShape(item.important_dates) ? JSON.parse(JSON.stringify(item.important_dates)) : defaultDateTable();
+    renderFlexTable('date');
+
+    feeTable = isFlexTableShape(item.application_fees) ? JSON.parse(JSON.stringify(item.application_fees)) : defaultFeeTable();
+    renderFlexTable('fee');
+
+    ageTable = isFlexTableShape(item.age_details) ? JSON.parse(JSON.stringify(item.age_details)) : defaultAgeTable();
+    renderFlexTable('age');
+
+    physicalRows = Array.isArray(item.physical_details) ? JSON.parse(JSON.stringify(item.physical_details)) : [];
+
+    vacancyRows = migrateVacancyRows(Array.isArray(item.vacancy_details) ? JSON.parse(JSON.stringify(item.vacancy_details)) : []);
+    vacancyRows.forEach(normalizeVacancyGroup);
+    renderVacancyRows();
+
+    regionRows = Array.isArray(item.region_dates) ? JSON.parse(JSON.stringify(item.region_dates)) : [];
+
+    categoryRows = Array.isArray(item.category_details) ? JSON.parse(JSON.stringify(item.category_details)) : [];
+
+    customSections = Array.isArray(item.custom_sections) ? JSON.parse(JSON.stringify(item.custom_sections)) : [];
+    customSections.forEach(normalizeCustomSection);
+
+    sectionOrder = Array.isArray(item.section_order) && item.section_order.length > 0
+      ? [...item.section_order]
+      : [...DEFAULT_SECTION_ORDER];
+    syncSectionOrderWithCustomSections();
+
+    renderCustomSections();
+    renderSectionOrder();
+  }
+
+  function copyListing(id){
+    const item = LISTINGS.find(l=>l.id === id);
+    if(!item) return;
+
+    clearFieldError('fieldwrap_f_title');
+    clearFieldError('fieldwrap_f_dept');
+    clearFieldError('fieldwrap_f_desc');
+
+    editingId = null; // stays in ADD mode — saving creates a brand-new, independent row
+
+    populateFormFromPayload(item);
+
+    // stays in "Add New Listing" mode — no link back to the original is stored anywhere
+    document.getElementById('formTitle').textContent = 'Add New Listing';
+    document.getElementById('modeBadge').style.display = 'none';
+    document.getElementById('cancelEditBtn').style.display = 'block';
+    document.getElementById('saveBtn').textContent = '+ Add Listing';
+    document.getElementById('draftBtn').textContent = '💾 Save as Draft';
+    showToast('Copied — edit anything below (including category), then click "+ Add Listing" to save as a new, independent listing.');
+    expandAllSections();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function startEdit(id){
+    const item = LISTINGS.find(l=>l.id === id);
+    if(!item) return;
+    clearFieldError('fieldwrap_f_title');
+    clearFieldError('fieldwrap_f_dept');
+    clearFieldError('fieldwrap_f_desc');
+    editingId = id;
+    populateFormFromPayload(item);
+
+    document.getElementById('formTitle').textContent = 'Edit Listing';
+    document.getElementById('modeBadge').style.display = 'inline-block';
+    document.getElementById('cancelEditBtn').style.display = 'block';
+    document.getElementById('saveBtn').textContent = item.status === 'draft' ? 'Publish' : 'Save Changes';
+    document.getElementById('draftBtn').textContent = item.status === 'draft' ? '💾 Save Draft Changes' : '💾 Unpublish to Draft';
+    expandAllSections();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function cancelEdit(){
+    editingId = null;
+    document.getElementById('formTitle').textContent = 'Add New Listing';
+    document.getElementById('modeBadge').style.display = 'none';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+    document.getElementById('saveBtn').textContent = '+ Add Listing';
+    document.getElementById('draftBtn').textContent = '💾 Save as Draft';
+    clearForm();
+  }
+
+  function clearForm(){
+    clearFieldError('fieldwrap_f_title');
+    clearFieldError('fieldwrap_f_dept');
+    clearFieldError('fieldwrap_f_desc');
+    document.getElementById('draftBtn').textContent = '💾 Save as Draft';
+    document.getElementById('f_title').value = '';
+    document.getElementById('f_dept').value = '';
+    document.getElementById('f_date').value = '';
+    document.getElementById('f_ref').value = '';
+    document.getElementById('f_total_post').value = '';
+    document.getElementById('f_tag').value = '';
+    document.getElementById('f_opening_date').value = '';
+    document.getElementById('f_closing_date').value = '';
+    document.getElementById('f_auto_badge').checked = false;
+    document.getElementById('f_desc').value = '';
+    document.getElementById('f_poster_url').value = ''; posterUrlChanged();
+    document.getElementById('f_title_dates').value = '';
+    document.getElementById('f_title_fees').value = '';
+    document.getElementById('f_title_age').value = '';
+    document.getElementById('f_title_vacancy').value = '';
+    document.getElementById('f_title_links').value = '';
+    linkRows = [];
+    renderLinkRows();
+
+    ageTable = defaultAgeTable();
+    renderFlexTable('age');
+
+    physicalRows = [];   // preserved-only field, no dedicated UI anymore (superseded by flexible Custom Section tables)
+
+    dateTable = defaultDateTable();
+    renderFlexTable('date');
+
+    feeTable = defaultFeeTable();
+    renderFlexTable('fee');
+
+    vacancyRows = [];
+    renderVacancyRows();
+
+    regionRows = [];     // preserved-only field, no dedicated UI anymore (superseded by flexible Custom Section tables)
+    categoryRows = [];   // preserved-only field, no dedicated UI anymore (superseded by flexible Custom Section tables)
+
+    customSections = [];
+    renderCustomSections();
+
+    sectionOrder = [...DEFAULT_SECTION_ORDER];
+    renderSectionOrder();
+    collapseAllSections();
+  }
+
+  async function deleteListing(id){
+    const item = LISTINGS.find(l => l.id === id);
+    const confirmed = confirm(`Move "${item ? item.title : 'this listing'}" to the Recycle Bin?\n\nIt will be automatically deleted forever after 15 days, unless restored before then.`);
+    if(!confirmed) return;
+
+    const { error } = await sb.from('listings').update({ deleted_at: new Date().toISOString() }).eq('id', id);
+    if(error){ showToast('Delete failed: ' + error.message); return; }
+    showToast('Listing moved to Recycle Bin.');
+    loadListings();
+    updateRecycleBinCount();
+  }
+
+  // ---- Recycle Bin ----
+  let RECYCLE_ITEMS = [];
+  let showingRecycleBin = false;
+  const RECYCLE_BIN_RETENTION_DAYS = 15;
+
+  async function autoPurgeOldRecycleBinItems(){
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - RECYCLE_BIN_RETENTION_DAYS);
+
+    const { error, count } = await sb
+      .from('listings')
+      .delete({ count: 'exact' })
+      .not('deleted_at', 'is', null)
+      .lt('deleted_at', cutoff.toISOString());
+
+    if(!error && count > 0){
+      console.log(`Auto-purged ${count} listing(s) from Recycle Bin (older than ${RECYCLE_BIN_RETENTION_DAYS} days).`);
+    }
+  }
+
+  async function updateRecycleBinCount(){
+    const { count, error } = await sb
+      .from('listings')
+      .select('*', { count: 'exact', head: true })
+      .not('deleted_at', 'is', null);
+    if(!error && document.getElementById('recycleBinCount')){
+      document.getElementById('recycleBinCount').textContent = count || 0;
+    }
+  }
+
+  async function loadRecycleBin(){
+    const { data, error } = await sb
+      .from('listings')
+      .select('*')
+      .not('deleted_at', 'is', null)
+      .order('deleted_at', { ascending: false });
+
+    if(error){
+      showToast('Could not load Recycle Bin: ' + error.message);
+      return;
+    }
+
+    RECYCLE_ITEMS = data.map(row => ({
+      id: row.id, cat: row.category, title: row.title, dept: row.dept,
+      date: row.date_text, ref: row.ref, deleted_at: row.deleted_at,
+    }));
+    renderRecycleBin();
+  }
+
+  function handleTableSearchInput(){
+    if(showingRecycleBin){
+      renderRecycleBin();
+    } else {
+      tableVisibleCount = 10;
+      renderTable();
+    }
+  }
+
+  function renderRecycleBin(){
+    const body = document.getElementById('tableBody');
+    const empty = document.getElementById('emptyNote');
+    const seeMoreWrap = document.getElementById('tableSeeMoreWrap');
+    body.innerHTML = '';
+    seeMoreWrap.style.display = 'none';
+
+    const term = (document.getElementById('tableSearchInput')?.value || '').toLowerCase().trim();
+    let filtered = RECYCLE_ITEMS;
+    if(term){
+      filtered = filtered.filter(item =>
+        (item.title || '').toLowerCase().includes(term) ||
+        (item.dept || '').toLowerCase().includes(term) ||
+        (item.ref || '').toLowerCase().includes(term)
+      );
+    }
+
+    document.getElementById('countBadge').textContent = filtered.length + ' items in bin';
+
+    if(filtered.length === 0){
+      empty.textContent = RECYCLE_ITEMS.length === 0 ? 'Recycle Bin is empty.' : 'No matching listings in the Recycle Bin.';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    filtered.forEach(item=>{
+      const deletedDate = item.deleted_at ? new Date(item.deleted_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="cat-tag">${catLabels[item.cat] || item.cat}</span></td>
+        <td>
+          <div class="row-title">${item.title}</div>
+          <div class="row-meta">${item.dept} · Deleted on ${deletedDate}</div>
+        </td>
+        <td>—</td>
+        <td>
+          <div class="row-actions">
+            <button class="edit" onclick="restoreListing(${item.id})">Restore</button>
+            <button class="edit" onclick="restoreListingAsDraft(${item.id})">Restore as Draft</button>
+            ${currentUserRole === 'admin' ? `<button class="del" onclick="permanentlyDeleteListing(${item.id})">Delete Forever</button>` : ''}
+          </div>
+        </td>`;
+      body.appendChild(tr);
+    });
+  }
+
+  async function restoreListing(id){
+    const item = RECYCLE_ITEMS.find(l => l.id === id);
+    const confirmed = confirm(`Restore "${item ? item.title : 'this listing'}" back to Current Listings?`);
+    if(!confirmed) return;
+
+    const { error } = await sb.from('listings').update({ deleted_at: null }).eq('id', id);
+    if(error){ showToast('Restore failed: ' + error.message); return; }
+    showToast('Listing restored.');
+    loadRecycleBin();
+    loadListings();
+    updateRecycleBinCount();
+  }
+
+  async function restoreListingAsDraft(id){
+    const item = RECYCLE_ITEMS.find(l => l.id === id);
+    const confirmed = confirm(`Restore "${item ? item.title : 'this listing'}" as a Draft? It will come back into Current Listings but stay unpublished until you publish it again.`);
+    if(!confirmed) return;
+
+    const { error } = await sb.from('listings').update({ deleted_at: null, status: 'draft' }).eq('id', id);
+    if(error){ showToast('Restore failed: ' + error.message); return; }
+    showToast('Listing restored as draft.');
+    loadRecycleBin();
+    loadListings();
+    updateRecycleBinCount();
+  }
+
+  async function permanentlyDeleteListing(id){
+    if(currentUserRole !== 'admin'){
+      showToast('Only admins can permanently delete listings.');
+      return;
+    }
+    const item = RECYCLE_ITEMS.find(l => l.id === id);
+    const confirmed = confirm(`Permanently delete "${item ? item.title : 'this listing'}"?\n\nThis CANNOT be undone.`);
+    if(!confirmed) return;
+
+    const { error } = await sb.from('listings').delete().eq('id', id);
+    if(error){ showToast('Permanent delete failed: ' + error.message); return; }
+    showToast('Listing permanently deleted.');
+    loadRecycleBin();
+    updateRecycleBinCount();
+  }
+
+  function toggleRecycleBinView(){
+    showingRecycleBin = !showingRecycleBin;
+    const btn = document.getElementById('recycleBinToggleBtn');
+    const searchInput = document.getElementById('tableSearchInput');
+    const catFilter = document.getElementById('tableCatFilter');
+    const statusFilter = document.getElementById('tableStatusFilter');
+    const panelTitle = document.getElementById('listingsPanelTitle');
+    searchInput.value = '';
+
+    if(showingRecycleBin){
+      btn.innerHTML = '← Back to Current Listings';
+      panelTitle.textContent = 'Recycle Bin';
+      searchInput.placeholder = '🔍 Search Recycle Bin by title, department, or reference number…';
+      catFilter.style.display = 'none';
+      statusFilter.style.display = 'none';
+      loadRecycleBin();
+    } else {
+      btn.innerHTML = '🗑 Recycle Bin (<span id="recycleBinCount">0</span>)';
+      panelTitle.textContent = 'Current Listings';
+      searchInput.placeholder = '🔍 Search by title, department, or reference number…';
+      catFilter.style.display = '';
+      statusFilter.style.display = '';
+      tableVisibleCount = 10;
+      renderTable();
+      updateRecycleBinCount();
+    }
+  }
+</script>
+</body>
+</html>
