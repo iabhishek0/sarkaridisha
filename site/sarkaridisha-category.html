@@ -282,7 +282,7 @@
     document.getElementById('pageTitle').textContent = label + ' — SarkariDisha';
     document.title = label + ' — SarkariDisha';
 
-    let query = sb.from('listings').select('*').is('deleted_at', null).order('created_at', { ascending: false }).eq('category', currentCat);
+    let query = sb.from('listings').select('*').is('deleted_at', null).order('updated_at', { ascending: false }).eq('category', currentCat);
 
     const { data, error } = await query;
 

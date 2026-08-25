@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unsubscribe — SarkariDisha</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://sarkaridisha.netlify.app/sarkaridisha-unsubscribe.html">
+<!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#16233D; --ink-deep:#0D1626; --paper:#FAF7F0; --paper-alt:#F1EADA;
+    --marigold:#B8790F; --marigold-light:#E8A93D; --teal:#1B6B6B;
+    --green:#256B45; --red:#A6321E;
+    --line:#D8CFB8; --line-strong:#B9AE8E;
+    --shadow:0 2px 8px rgba(22,35,61,.08), 0 1px 2px rgba(22,35,61,.06);
+    --shadow-lg:0 8px 24px rgba(22,35,61,.14), 0 2px 6px rgba(22,35,61,.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  a{color:var(--marigold);}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  .utility{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .utility .wrap{display:flex;align-items:center;justify-content:space-between;height:34px;max-width:1180px;}
+  .utility a{color:var(--paper);}
+  .utility a:hover{color:#F2C879;}
+
+  .masthead{border-bottom:3px solid var(--ink);padding:22px 0;}
+  .masthead .wrap{max-width:1180px;display:flex;align-items:center;gap:16px;}
+  .stamp-logo{width:48px;height:48px;border-radius:50%;object-fit:contain;background:#fff;flex-shrink:0;}
+  .masthead h1{font-family:'Zilla Slab',serif;font-size:24px;margin:0;font-weight:700;}
+
+  main{padding:60px 0 80px;display:flex;justify-content:center;}
+  .card{
+    max-width:460px;width:100%;text-align:center;
+    background:var(--paper-alt);border:1px solid var(--line-strong);border-radius:10px;
+    padding:40px 34px;box-shadow:var(--shadow);
+  }
+  .icon{font-size:38px;margin-bottom:14px;}
+  .card h2{font-family:'Zilla Slab',serif;font-size:22px;margin:0 0 10px;color:var(--ink-deep);}
+  .card p{font-size:14.5px;line-height:1.75;color:#544928;margin:0 0 20px;}
+  .card a.back{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;
+    color:var(--ink); border-bottom:1px solid var(--line-strong);
+  }
+  .card.state-err .icon{filter:grayscale(1);}
+
+  footer{background:var(--ink);color:var(--paper);padding:22px 0;margin-top:0;}
+  footer .wrap{max-width:1180px;}
+  footer p{margin:0;font-size:11px;color:#B9B29A;}
+
+  @media (max-width:600px){
+    .masthead h1{font-size:20px;}
+    main{padding:40px 0 60px;}
+    .card{padding:32px 24px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="utility">
+    <div class="wrap">
+      <a href="index.html">← Back to all listings</a>
+      <span>SarkariDisha</span>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="wrap">
+      <img src="sarkaridisha-logo.png" alt="SarkariDisha" class="stamp-logo">
+      <h1>Email Alerts</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card" id="card">
+      <div class="icon">⏳</div>
+      <h2>Working on it…</h2>
+      <p>Please wait a moment.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>SarkariDisha is an independent information portal. Not affiliated with any government body.</p>
+    </div>
+  </footer>
+
+<script>
+  const SUPABASE_URL = 'https://xnagaojcdrcjthoazogp.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Gh-xRyHii3daT3RodbJGQw_m9ekf_p7';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const card = document.getElementById('card');
+
+  function showCard(icon, title, message, stateClass){
+    card.className = 'card ' + stateClass;
+    card.innerHTML = `
+      <div class="icon">${icon}</div>
+      <h2>${title}</h2>
+      <p>${message}</p>
+      <a class="back" href="index.html">← Back to SarkariDisha</a>
+    `;
+  }
+
+  (async function(){
+    const token = new URLSearchParams(window.location.search).get('token');
+    if(!token){
+      showCard('⚠️', 'Missing link details', 'This unsubscribe link looks incomplete. Please use the link exactly as it appeared in your email.', 'state-err');
+      return;
+    }
+
+    const { data, error } = await sb.rpc('unsubscribe_by_token', { token });
+
+    if(error){
+      showCard('⚠️', 'Something went wrong', 'We couldn\'t process this request right now. Please try again in a moment.', 'state-err');
+      return;
+    }
+
+    if(data === true){
+      showCard('✓', 'You\'re unsubscribed', 'You won\'t receive any further email alerts from SarkariDisha. You can subscribe again any time from the homepage.', 'state-ok');
+    } else {
+      showCard('✓', 'Already unsubscribed', 'This link has already been used, or your subscription no longer exists — either way, you won\'t receive further alerts.', 'state-ok');
+    }
+  })();
+</script>
+</body>
+</html>

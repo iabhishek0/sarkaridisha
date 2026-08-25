@@ -201,6 +201,52 @@
     cursor:pointer;letter-spacing:.04em;
   }
   .hero-search button:hover{background:var(--marigold-light);}
+    /* Email alerts — "official circular" styled panel */
+  .alert-notice{
+    background:var(--paper-alt);border:1px solid var(--line-strong);border-radius:10px;
+    padding:30px 32px;margin:28px 0;position:relative;overflow:hidden;
+    display:flex;align-items:center;gap:26px;box-shadow:var(--shadow);
+  }
+  .alert-notice::before{
+    content:"";position:absolute;top:0;left:0;bottom:0;width:5px;background:var(--teal);
+  }
+  .alert-seal{
+    flex:none;width:64px;height:64px;border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #2E8C8C, var(--teal) 70%);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 3px 10px rgba(27,107,107,.35), inset 0 0 0 3px rgba(250,247,240,.35);
+    font-size:24px;
+  }
+  .alert-body{flex:1;min-width:220px;}
+  .alert-eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--teal);font-weight:700;margin:0 0 6px;
+  }
+  .alert-body h3{
+    font-family:'Zilla Slab',serif;font-size:22px;font-weight:700;margin:0 0 6px;color:var(--ink-deep);
+  }
+  .alert-body p{font-size:13.5px;color:#544928;margin:0;line-height:1.6;}
+  .alert-form{
+    display:flex;flex:none;width:340px;box-shadow:var(--shadow);border-radius:6px;overflow:hidden;
+  }
+  .alert-form input{
+    flex:1;border:1px solid var(--line-strong);border-right:none;padding:13px 14px;font-size:14px;
+    font-family:'IBM Plex Sans',sans-serif;outline:none;background:var(--paper);color:var(--ink);
+  }
+  .alert-form button{
+    border:none;background:var(--teal);color:var(--paper);
+    padding:0 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;
+    cursor:pointer;letter-spacing:.03em;white-space:nowrap;
+  }
+  .alert-form button:hover{background:#22807F;}
+  .alert-form button:disabled{opacity:.6;cursor:default;}
+  .alert-status{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-top:8px;min-height:16px;}
+  .alert-status.ok{color:var(--green);}
+  .alert-status.err{color:var(--red);}
+  @media (max-width:720px){
+    .alert-notice{flex-direction:column;align-items:flex-start;padding:24px 22px;}
+    .alert-form{width:100%;}
+  }
 
   /* Nav tabs */
   .tabbar{background:var(--paper-alt);border-bottom:1px solid var(--line-strong);}
@@ -271,6 +317,7 @@
   }
   .meta .urgent{color:var(--red);font-weight:700;}
   .meta .ok{color:var(--green);font-weight:700;}
+  .meta .updated-note{color:#8A8265;font-style:italic;font-weight:400;}
 
   .stamp{
     flex-shrink:0;
@@ -809,7 +856,27 @@
       <script src="https://www.highperformanceformat.com/46a560bcd1af63fd513ba89c017629d1/invoke.js"></script>
     </div>
   </div>
+  <div class="wrap">
+    <div class="alert-notice">
+      <div class="alert-seal" aria-hidden="true">🔔</div>
+      <div class="alert-body">
+        <p class="alert-eyebrow" data-i18n="alertEyebrow">Free Email Alerts</p>
+        <h3 data-i18n="alertTitle">Never miss a new vacancy</h3>
+        <p data-i18n="alertSub">Get an email the moment a new job, result or admit card is posted — no spam, unsubscribe anytime.</p>
+      </div>
+      <div>
+        <form class="alert-form" id="alertAllForm">
+          <input type="email" id="alertAllEmail" placeholder="you@example.com" required autocomplete="email">
+          <button type="submit" id="alertAllBtn" data-i18n="alertBtn">Subscribe</button>
+        </form>
+        <div class="alert-status" id="alertAllStatus"></div>
+      </div>
+    </div>
+  </div>
 
+  <footer>
+    <div class="wrap">
+      <div class="fbrand">SarkariDisha</div>
   <footer>
     <div class="wrap">
       <div class="fbrand">SarkariDisha</div>
@@ -849,6 +916,10 @@
       footerDisclaimer: 'Disclaimer',
       footerContact: 'Contact',
       itemsWord: 'items',
+      alertEyebrow: 'Free Email Alerts',
+      alertTitle: 'Never miss a new vacancy',
+      alertSub: 'Get an email the moment a new job, result or admit card is posted — no spam, unsubscribe anytime.',
+      alertBtn: 'Subscribe',
     },
     hi: {
       tagline: 'सरकारी नौकरी सूचनाएं · परिणाम · प्रवेश पत्र',
@@ -873,6 +944,10 @@
       footerDisclaimer: 'अस्वीकरण',
       footerContact: 'संपर्क करें',
       itemsWord: 'सूचनाएं',
+      alertEyebrow: 'मुफ़्त ईमेल अलर्ट',
+      alertTitle: 'कोई नई वैकेंसी न चूकें',
+      alertSub: 'नई नौकरी, परिणाम या प्रवेश पत्र आते ही ईमेल पाएं — कोई स्पैम नहीं, कभी भी अनसब्सक्राइब करें।',
+      alertBtn: 'सब्सक्राइब करें',
     },
   };
 
@@ -946,6 +1021,22 @@
   // A listing can use either date, both, or neither. When autoBadge is off, or neither date
   // applies right now, this falls through to the manually-picked tag, including the existing
   // NEW_BADGE_DAYS auto-expiry for a manually-set NEW badge (timed from created_at instead).
+    // A quiet "Updated Xd ago" note for listings edited after they were first posted. Shows the day
+  // count for the first UPDATED_NOTE_DAYS days, then settles into a plain "Updated" indefinitely —
+  // so a genuinely edited listing is never mistaken for one that's never been touched. Ignores
+  // same-day noise from the created_at/updated_at backfill so it only shows for real edits.
+  const UPDATED_NOTE_DAYS = 5;
+  function updatedNote(createdAt, updatedAt){
+    if(!updatedAt || !createdAt) return '';
+    const created = new Date(createdAt).getTime();
+    const updated = new Date(updatedAt).getTime();
+    if(updated - created < 60 * 60 * 1000) return ''; // edited within an hour of posting = not a real edit
+    const daysAgo = Math.floor((Date.now() - updated) / (24 * 60 * 60 * 1000));
+    if(daysAgo <= 0) return 'Updated today';
+    if(daysAgo === 1) return 'Updated yesterday';
+    if(daysAgo <= UPDATED_NOTE_DAYS) return `Updated ${daysAgo}d ago`;
+    return 'Updated';
+  }
   function effectiveTag(tag, createdAt, closingDate, openingDate, autoBadge){
     if(autoBadge && closingDate){
       const today = new Date(); today.setHours(0,0,0,0);
@@ -972,7 +1063,7 @@
       .from('listings')
       .select('*')
       .is('deleted_at', null)
-      .order('created_at', { ascending: false });
+      .order('updated_at', { ascending: false });
 
     if(error){
       console.error('Could not load listings:', error);
@@ -994,6 +1085,7 @@
         ref: row.ref,
         total_post: row.total_post || '',
         created_at: row.created_at,
+        updatedNote: updatedNote(row.created_at, row.updated_at),
         description: row.description || '',
         apply_link: row.apply_link || '',
         notification_link: row.notification_link || '',
@@ -1027,6 +1119,7 @@
       if(item.total_post) metaParts.push(`<span>${item.total_post} Posts</span>`);
       if(item.date) metaParts.push(`<span class="${item.cat==='result' ? 'ok' : (item.tag==='NEW' ? 'urgent':'')}">${item.date}</span>`);
       if(item.ref) metaParts.push(`<span>${item.ref}</span>`);
+      if(item.updatedNote) metaParts.push(`<span class="updated-note">${item.updatedNote}</span>`);
       row.innerHTML = `
         <div class="listing-top">
           <a class="title" href="sarkaridisha-detail.html?id=${item.id}">${item.title}</a>
@@ -1101,6 +1194,47 @@
   const savedLang = localStorage.getItem('sarkaridisha_lang') || 'en';
   setLanguage(savedLang);
   loadListings();
+
+  // ---- site-wide email alerts ("notify me about every new listing") ----
+  (function(){
+    const form = document.getElementById('alertAllForm');
+    const emailInput = document.getElementById('alertAllEmail');
+    const btn = document.getElementById('alertAllBtn');
+    const status = document.getElementById('alertAllStatus');
+
+    if(localStorage.getItem('sarkaridisha_subscribed_all') === '1'){
+      btn.textContent = '✓ Subscribed';
+      btn.disabled = true;
+      emailInput.value = localStorage.getItem('sarkaridisha_subscribed_email') || '';
+      emailInput.disabled = true;
+    }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if(!email) return;
+      btn.disabled = true;
+      btn.textContent = '…';
+      status.textContent = '';
+      status.className = 'alert-status';
+
+      const { error } = await sb.rpc('subscribe_all_by_email', { p_email: email });
+
+      if(error){
+        status.textContent = 'Something went wrong — please try again.';
+        status.className = 'alert-status err';
+        btn.disabled = false;
+        btn.textContent = t('alertBtn');
+        return;
+      }
+      localStorage.setItem('sarkaridisha_subscribed_all', '1');
+      localStorage.setItem('sarkaridisha_subscribed_email', email);
+      btn.textContent = '✓ Subscribed';
+      emailInput.disabled = true;
+      status.textContent = 'You\'re on the list! Check your inbox for future alerts.';
+      status.className = 'alert-status ok';
+    });
+  })();
 </script>
 <a href="https://sarkaridishatools.netlify.app/" target="_blank" rel="noopener" class="tools-float-badge">
     <span class="tools-float-icon">🛠️</span>
