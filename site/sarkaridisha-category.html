@@ -73,6 +73,7 @@
   }
   .meta .urgent{color:var(--red);font-weight:700;}
   .meta .ok{color:var(--green);font-weight:700;}
+  .meta .updated-note{color:#8A8265;font-style:italic;font-weight:400;}
   .stamp{
     flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;
     letter-spacing:.06em;border:1.5px solid var(--red);color:var(--red);
@@ -252,6 +253,18 @@
   // A listing can use either date, both, or neither. When autoBadge is off, or neither date
   // applies right now, this falls through to the manually-picked tag, including the existing
   // NEW_BADGE_DAYS auto-expiry for a manually-set NEW badge (timed from created_at instead).
+  const UPDATED_NOTE_DAYS = 5;
+  function updatedNote(createdAt, updatedAt){
+    if(!updatedAt || !createdAt) return '';
+    const created = new Date(createdAt).getTime();
+    const updated = new Date(updatedAt).getTime();
+    if(updated - created < 60 * 60 * 1000) return '';
+    const daysAgo = Math.floor((Date.now() - updated) / (24 * 60 * 60 * 1000));
+    if(daysAgo <= 0) return 'Updated today';
+    if(daysAgo === 1) return 'Updated yesterday';
+    if(daysAgo <= UPDATED_NOTE_DAYS) return `Updated ${daysAgo}d ago`;
+    return 'Updated';
+  }
   function effectiveTag(tag, createdAt, closingDate, openingDate, autoBadge){
     if(autoBadge && closingDate){
       const today = new Date(); today.setHours(0,0,0,0);
@@ -306,6 +319,7 @@
         ref: row.ref,
         total_post: row.total_post || '',
         created_at: row.created_at,
+        updatedNote: updatedNote(row.created_at, row.updated_at),
       };
     });
 
@@ -339,6 +353,7 @@
       if(item.total_post) metaParts.push(`<span>${item.total_post} Posts</span>`);
       if(item.date) metaParts.push(`<span class="${item.cat==='result' ? 'ok' : (item.tag==='NEW' ? 'urgent':'')}">${item.date}</span>`);
       if(item.ref) metaParts.push(`<span>${item.ref}</span>`);
+      if(item.updatedNote) metaParts.push(`<span class="updated-note">${item.updatedNote}</span>`);
       row.innerHTML = `
         <div class="listing-top">
           <a class="title" href="sarkaridisha-detail.html?id=${item.id}">${item.title}</a>
