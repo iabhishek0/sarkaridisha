@@ -1091,6 +1091,8 @@
   // ---- per-listing email alert ("notify me about changes to this one") ----
   // Small bell icon, top-right of the listing card. Click opens a compact popover
   // with the email field; click elsewhere, or Escape, closes it again.
+  // NOTE: deliberately no permanent localStorage "already subscribed" lock — see the
+  // matching note on the homepage's site-wide bell for why (stale state after unsubscribing).
   function wireNotifyBox(listingId){
     const btn = document.getElementById('notifyBtn');
     const popover = document.getElementById('notifyPopover');
@@ -1098,15 +1100,6 @@
     const emailInput = document.getElementById('notifyEmail');
     const status = document.getElementById('notifyStatus');
     if(!btn) return;
-
-    const storageKey = 'sarkaridisha_notify_' + listingId;
-    if(localStorage.getItem(storageKey)){
-      btn.textContent = '✓';
-      btn.title = "You'll be notified about this listing";
-      btn.setAttribute('aria-label', "You'll be notified about this listing");
-      btn.classList.add('is-on');
-      return;
-    }
 
     function closePopover(){
       popover.classList.remove('open');
@@ -1140,21 +1133,26 @@
 
       const { error } = await sb.rpc('subscribe_to_listing', { p_email: email, p_listing_id: listingId });
 
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Go';
+
       if(error){
+        const alreadySubscribed = error.code === '23505'
+          || /already subscribed|duplicate key/i.test(error.message || '');
+        if(alreadySubscribed){
+          status.textContent = 'This email is already subscribed to this listing.';
+          status.className = 'notify-status ok';
+          setTimeout(closePopover, 1800);
+          return;
+        }
         status.textContent = 'Something went wrong — please try again.';
         status.className = 'notify-status err';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Go';
         return;
       }
-      localStorage.setItem(storageKey, '1');
-      closePopover();
-      btn.textContent = '✓';
-      btn.title = "You'll be notified about this listing";
-      btn.setAttribute('aria-label', "You'll be notified about this listing");
-      btn.classList.add('is-on');
       status.textContent = 'Done! We\'ll email you when this listing changes.';
       status.className = 'notify-status ok';
+      emailInput.value = '';
+      setTimeout(closePopover, 1800);
     });
   }
 

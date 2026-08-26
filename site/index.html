@@ -1200,6 +1200,11 @@
 
   // ---- site-wide email alerts ("notify me about every new listing") ----
   // Small floating bell (bottom-left, always visible) that opens a popover with the form.
+  // NOTE: we deliberately do NOT lock this permanently via localStorage once someone
+  // subscribes — if they later unsubscribe (via the link in the email, which only updates
+  // the database), this browser would otherwise still show a stale "already subscribed"
+  // state forever with no way to fix it. So the bell always stays clickable; we ask the
+  // server on each submit instead, and it tells us if that email is already subscribed.
   (function(){
     const bellBtn = document.getElementById('alertAllBtn');
     const popover = document.getElementById('alertPopover');
@@ -1207,18 +1212,6 @@
     const emailInput = document.getElementById('alertAllEmail');
     const submitBtn = form.querySelector('button');
     const status = document.getElementById('alertAllStatus');
-
-    if(localStorage.getItem('sarkaridisha_subscribed_all') === '1'){
-      bellBtn.textContent = '✓';
-      bellBtn.classList.add('is-on');
-      bellBtn.title = "You're subscribed to email alerts";
-      bellBtn.setAttribute('aria-label', "You're subscribed to email alerts");
-      submitBtn.textContent = '✓ Subscribed';
-      submitBtn.disabled = true;
-      emailInput.value = localStorage.getItem('sarkaridisha_subscribed_email') || '';
-      emailInput.disabled = true;
-      return; // already subscribed — bell no longer opens the popover
-    }
 
     function closePopover(){
       popover.classList.remove('open');
@@ -1251,24 +1244,29 @@
 
       const { error } = await sb.rpc('subscribe_all_by_email', { p_email: email });
 
+      submitBtn.disabled = false;
+      submitBtn.textContent = t('alertBtn');
+
       if(error){
+        // Postgres unique-violation — this email is already subscribed. Treat as a normal
+        // outcome, not an error: tell them plainly instead of a generic failure message.
+        const alreadySubscribed = error.code === '23505'
+          || /already subscribed|duplicate key/i.test(error.message || '');
+        if(alreadySubscribed){
+          status.textContent = 'This email is already subscribed to alerts.';
+          status.className = 'alert-status ok';
+          setTimeout(closePopover, 1800);
+          return;
+        }
         status.textContent = 'Something went wrong — please try again.';
         status.className = 'alert-status err';
-        submitBtn.disabled = false;
-        submitBtn.textContent = t('alertBtn');
         return;
       }
-      localStorage.setItem('sarkaridisha_subscribed_all', '1');
-      localStorage.setItem('sarkaridisha_subscribed_email', email);
-      bellBtn.textContent = '✓';
-      bellBtn.classList.add('is-on');
-      bellBtn.title = "You're subscribed to email alerts";
-      bellBtn.setAttribute('aria-label', "You're subscribed to email alerts");
-      submitBtn.textContent = '✓ Subscribed';
-      emailInput.disabled = true;
+
       status.textContent = 'You\'re on the list! Check your inbox for future alerts.';
       status.className = 'alert-status ok';
-      setTimeout(closePopover, 1400);
+      emailInput.value = '';
+      setTimeout(closePopover, 1800);
     });
   })();
 </script>
