@@ -201,51 +201,54 @@
     cursor:pointer;letter-spacing:.04em;
   }
   .hero-search button:hover{background:var(--marigold-light);}
-    /* Email alerts — "official circular" styled panel */
-  .alert-notice{
-    background:var(--paper-alt);border:1px solid var(--line-strong);border-radius:10px;
-    padding:30px 32px;margin:28px 0;position:relative;overflow:hidden;
-    display:flex;align-items:center;gap:26px;box-shadow:var(--shadow);
-  }
-  .alert-notice::before{
-    content:"";position:absolute;top:0;left:0;bottom:0;width:5px;background:var(--teal);
-  }
-  .alert-seal{
-    flex:none;width:64px;height:64px;border-radius:50%;
+
+  /* Site-wide email alerts — small floating bell, always visible, bottom-left corner
+     (mirrors the per-listing bell on the detail page; kept opposite the Free Tools
+     badge at bottom-right so the two never collide). */
+  .alert-float-badge{
+    position:fixed;left:18px;bottom:18px;z-index:60;
+    width:52px;height:52px;border-radius:50%;
     background:radial-gradient(circle at 32% 28%, #2E8C8C, var(--teal) 70%);
     display:flex;align-items:center;justify-content:center;
-    box-shadow:0 3px 10px rgba(27,107,107,.35), inset 0 0 0 3px rgba(250,247,240,.35);
-    font-size:24px;
+    box-shadow:0 8px 24px rgba(22,35,61,.22), 0 2px 6px rgba(22,35,61,.14), inset 0 0 0 3px rgba(250,247,240,.25);
+    font-size:22px;cursor:pointer;border:none;color:var(--paper);
+    transition:transform .15s, box-shadow .15s;
   }
-  .alert-body{flex:1;min-width:220px;}
+  .alert-float-badge:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(22,35,61,.28);}
+  .alert-float-badge.is-on{background:radial-gradient(circle at 32% 28%, #2F8F5B, var(--green) 70%);cursor:default;}
+  .alert-float-badge.is-on:hover{transform:none;}
+  .alert-popover{
+    display:none;position:fixed;left:18px;bottom:82px;z-index:60;width:300px;
+    background:var(--paper);border:1px solid var(--line-strong);border-radius:10px;
+    box-shadow:var(--shadow-lg);padding:18px;
+  }
+  .alert-popover.open{display:block;}
   .alert-eyebrow{
     font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
     color:var(--teal);font-weight:700;margin:0 0 6px;
   }
-  .alert-body h3{
-    font-family:'Zilla Slab',serif;font-size:22px;font-weight:700;margin:0 0 6px;color:var(--ink-deep);
+  .alert-popover h3{
+    font-family:'Zilla Slab',serif;font-size:17px;font-weight:700;margin:0 0 6px;color:var(--ink-deep);
   }
-  .alert-body p{font-size:13.5px;color:#544928;margin:0;line-height:1.6;}
-  .alert-form{
-    display:flex;flex:none;width:340px;box-shadow:var(--shadow);border-radius:6px;overflow:hidden;
-  }
+  .alert-popover p{font-size:12.5px;color:#544928;margin:0 0 12px;line-height:1.55;}
+  .alert-form{display:flex;box-shadow:var(--shadow);border-radius:6px;overflow:hidden;}
   .alert-form input{
-    flex:1;border:1px solid var(--line-strong);border-right:none;padding:13px 14px;font-size:14px;
+    flex:1;min-width:0;border:1px solid var(--line-strong);border-right:none;padding:11px 12px;font-size:13.5px;
     font-family:'IBM Plex Sans',sans-serif;outline:none;background:var(--paper);color:var(--ink);
   }
   .alert-form button{
     border:none;background:var(--teal);color:var(--paper);
-    padding:0 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;
+    padding:0 16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;
     cursor:pointer;letter-spacing:.03em;white-space:nowrap;
   }
   .alert-form button:hover{background:#22807F;}
   .alert-form button:disabled{opacity:.6;cursor:default;}
-  .alert-status{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-top:8px;min-height:16px;}
+  .alert-status{font-family:'IBM Plex Mono',monospace;font-size:11.5px;margin-top:8px;min-height:15px;}
   .alert-status.ok{color:var(--green);}
   .alert-status.err{color:var(--red);}
-  @media (max-width:720px){
-    .alert-notice{flex-direction:column;align-items:flex-start;padding:24px 22px;}
-    .alert-form{width:100%;}
+  @media (max-width:600px){
+    .alert-float-badge{left:12px;bottom:12px;width:46px;height:46px;font-size:19px;}
+    .alert-popover{left:12px;right:12px;width:auto;bottom:70px;}
   }
 
   /* Nav tabs */
@@ -856,23 +859,6 @@
       <script src="https://www.highperformanceformat.com/46a560bcd1af63fd513ba89c017629d1/invoke.js"></script>
     </div>
   </div>
-  <div class="wrap">
-    <div class="alert-notice">
-      <div class="alert-seal" aria-hidden="true">🔔</div>
-      <div class="alert-body">
-        <p class="alert-eyebrow" data-i18n="alertEyebrow">Free Email Alerts</p>
-        <h3 data-i18n="alertTitle">Never miss a new vacancy</h3>
-        <p data-i18n="alertSub">Get an email the moment a new job, result or admit card is posted — no spam, unsubscribe anytime.</p>
-      </div>
-      <div>
-        <form class="alert-form" id="alertAllForm">
-          <input type="email" id="alertAllEmail" placeholder="you@example.com" required autocomplete="email">
-          <button type="submit" id="alertAllBtn" data-i18n="alertBtn">Subscribe</button>
-        </form>
-        <div class="alert-status" id="alertAllStatus"></div>
-      </div>
-    </div>
-  </div>
 
   <footer>
     <div class="wrap">
@@ -886,6 +872,26 @@
       </div>
     </div>
   </footer>
+
+<button type="button" class="alert-float-badge" id="alertAllBtn" title="Get free email alerts for new listings" aria-label="Get free email alerts for new listings">🔔</button>
+<div class="alert-popover" id="alertPopover">
+  <p class="alert-eyebrow" data-i18n="alertEyebrow">Free Email Alerts</p>
+  <h3 data-i18n="alertTitle">Never miss a new vacancy</h3>
+  <p data-i18n="alertSub">Get an email the moment a new job, result or admit card is posted — no spam, unsubscribe anytime.</p>
+  <form class="alert-form" id="alertAllForm">
+    <input type="email" id="alertAllEmail" placeholder="you@example.com" required autocomplete="email">
+    <button type="submit" data-i18n="alertBtn">Subscribe</button>
+  </form>
+  <div class="alert-status" id="alertAllStatus"></div>
+</div>
+
+<a href="https://sarkaridishatools.netlify.app/" target="_blank" rel="noopener" class="tools-float-badge">
+    <span class="tools-float-icon">🛠️</span>
+    <span class="tools-float-text">
+      <span class="tools-float-label">Free Tools</span>
+      <span class="tools-float-sub">Form-filling made easy</span>
+    </span>
+  </a>
 
 <script>
   // ---- language / translation system ----
@@ -1193,25 +1199,53 @@
   loadListings();
 
   // ---- site-wide email alerts ("notify me about every new listing") ----
+  // Small floating bell (bottom-left, always visible) that opens a popover with the form.
   (function(){
+    const bellBtn = document.getElementById('alertAllBtn');
+    const popover = document.getElementById('alertPopover');
     const form = document.getElementById('alertAllForm');
     const emailInput = document.getElementById('alertAllEmail');
-    const btn = document.getElementById('alertAllBtn');
+    const submitBtn = form.querySelector('button');
     const status = document.getElementById('alertAllStatus');
 
     if(localStorage.getItem('sarkaridisha_subscribed_all') === '1'){
-      btn.textContent = '✓ Subscribed';
-      btn.disabled = true;
+      bellBtn.textContent = '✓';
+      bellBtn.classList.add('is-on');
+      bellBtn.title = "You're subscribed to email alerts";
+      bellBtn.setAttribute('aria-label', "You're subscribed to email alerts");
+      submitBtn.textContent = '✓ Subscribed';
+      submitBtn.disabled = true;
       emailInput.value = localStorage.getItem('sarkaridisha_subscribed_email') || '';
       emailInput.disabled = true;
+      return; // already subscribed — bell no longer opens the popover
     }
+
+    function closePopover(){
+      popover.classList.remove('open');
+    }
+
+    bellBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popover.classList.toggle('open');
+      if(popover.classList.contains('open')) emailInput.focus();
+    });
+
+    document.addEventListener('click', (e) => {
+      if(popover.classList.contains('open') && !popover.contains(e.target) && e.target !== bellBtn){
+        closePopover();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closePopover();
+    });
 
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const email = emailInput.value.trim();
       if(!email) return;
-      btn.disabled = true;
-      btn.textContent = '…';
+      submitBtn.disabled = true;
+      submitBtn.textContent = '…';
       status.textContent = '';
       status.className = 'alert-status';
 
@@ -1220,25 +1254,23 @@
       if(error){
         status.textContent = 'Something went wrong — please try again.';
         status.className = 'alert-status err';
-        btn.disabled = false;
-        btn.textContent = t('alertBtn');
+        submitBtn.disabled = false;
+        submitBtn.textContent = t('alertBtn');
         return;
       }
       localStorage.setItem('sarkaridisha_subscribed_all', '1');
       localStorage.setItem('sarkaridisha_subscribed_email', email);
-      btn.textContent = '✓ Subscribed';
+      bellBtn.textContent = '✓';
+      bellBtn.classList.add('is-on');
+      bellBtn.title = "You're subscribed to email alerts";
+      bellBtn.setAttribute('aria-label', "You're subscribed to email alerts");
+      submitBtn.textContent = '✓ Subscribed';
       emailInput.disabled = true;
       status.textContent = 'You\'re on the list! Check your inbox for future alerts.';
       status.className = 'alert-status ok';
+      setTimeout(closePopover, 1400);
     });
   })();
 </script>
-<a href="https://sarkaridishatools.netlify.app/" target="_blank" rel="noopener" class="tools-float-badge">
-    <span class="tools-float-icon">🛠️</span>
-    <span class="tools-float-text">
-      <span class="tools-float-label">Free Tools</span>
-      <span class="tools-float-sub">Form-filling made easy</span>
-    </span>
-  </a>
-
-<ins class="adsbygoogle adsbygoogle-noablate" data-ad-hi="true" data-adsbygoogle-status="done" style="display: none !important;"><div id="aswift_0_host" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;"><iframe id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;min-height:auto;max-height:none;min-width:auto;max-width:none;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting; run-ad-auction" src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-1651008634632225&amp;output=html&amp;adk=1812271804&amp;adf=3025194257&amp;abgtt=6&amp;lmt=1786419448&amp;plat=1%3A16777224%2C2%3A8%2C3%3A2162688%2C4%3A2162688%2C9%3A32776%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C30%3A1048576%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32%2C44%3A32&amp;format=0x0&amp;url=http%3A%2F%2Flocalhost%3A8743%2Findex.html&amp;pra=5&amp;asro=0&amp;aimartd=4&amp;aieuf=1&amp;aicrs=1&amp;uach=WyJXaW5kb3dzIiwiMTkuMC4wIiwieDg2IiwiIiwiMTMxLjAuNjc3OC4yMDQiLG51bGwsMCxudWxsLCI2NCIsW1siQ2hyb21pdW0iLCIxMzEuMC42Nzc4LjIwNCJdLFsiTm90X0EgQnJhbmQiLCIyNC4wLjAuMCJdXSwwXQ..&amp;dt=1786419448259&amp;bpp=19&amp;bdt=1744&amp;idt=528&amp;shv=r20260810&amp;mjsv=m202608060101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie_enabled=1&amp;eoidce=1&amp;nras=1&amp;correlator=2485968498581&amp;frm=20&amp;pv=2&amp;u_tz=330&amp;u_his=2&amp;u_h=864&amp;u_w=1536&amp;u_ah=864&amp;u_aw=1536&amp;u_cd=24&amp;u_sd=1&amp;dmc=8&amp;adx=-12245933&amp;ady=-12245933&amp;biw=800&amp;bih=600&amp;scr_x=0&amp;scr_y=0&amp;eid=95396139%2C95397133%2C122880127&amp;oid=2&amp;pvsid=168381443283527&amp;tmod=931982252&amp;uas=3&amp;nvt=1&amp;fsapi=1&amp;fc=1920&amp;brdim=12%2C12%2C12%2C12%2C1536%2C0%2C1313%2C996%2C800%2C600&amp;vis=1&amp;rsz=%7C%7Cs%7C&amp;abl=NS&amp;fu=32768&amp;bc=31&amp;bz=1.64&amp;ifi=1&amp;uci=a!1&amp;fsb=1&amp;dtd=642" data-google-container-id="a!1" tabindex="0" title="Advertisement" aria-label="Advertisement" data-load-complete="true"></iframe></div></ins></body><iframe id="google_esf" name="google_esf" src="https://googleads.g.doubleclick.net/pagead/html/r20260810/r20190131/zrt_lookup.html" style="display: none;"></iframe></html>
+</body>
+</html>

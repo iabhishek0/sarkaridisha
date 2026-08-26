@@ -114,30 +114,45 @@
   .meta-strip div:last-child{border-right:none;}
   .meta-strip div b{display:block;color:var(--marigold);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;font-weight:700;}
 
-  .notify-box{margin-bottom:26px;}
+  /* Notify — small floating bell, top-right corner of the listing card, popover on click */
+  .title-row{position:relative;padding-right:50px;}
+  .notify-box{position:absolute;top:-6px;right:0;z-index:5;}
   .notify-btn{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--paper-alt);border:1px solid var(--marigold);color:var(--marigold);
-    font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;letter-spacing:.02em;
-    padding:11px 18px;border-radius:6px;cursor:pointer;transition:background .15s,color .15s;
+    width:38px;height:38px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--paper-alt);border:1.5px solid var(--marigold);color:var(--marigold);
+    border-radius:50%;font-size:16px;cursor:pointer;
+    box-shadow:var(--shadow);transition:background .15s,color .15s,transform .15s;
   }
-  .notify-btn:hover{background:var(--marigold);color:var(--paper);}
+  .notify-btn:hover{background:var(--marigold);color:var(--paper);transform:scale(1.06);}
   .notify-btn.is-on{background:var(--green);border-color:var(--green);color:var(--paper);cursor:default;}
-  .notify-form{
-    display:flex;max-width:420px;margin-top:10px;box-shadow:var(--shadow);border-radius:6px;overflow:hidden;
+  .notify-btn.is-on:hover{transform:none;}
+  .notify-popover{
+    display:none;position:absolute;top:46px;right:0;width:260px;
+    background:var(--paper);border:1px solid var(--line-strong);border-radius:8px;
+    box-shadow:var(--shadow-lg);padding:14px;
   }
+  .notify-popover.open{display:block;}
+  .notify-popover-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;margin-bottom:9px;
+  }
+  .notify-form{display:flex;box-shadow:var(--shadow);border-radius:6px;overflow:hidden;}
   .notify-form input{
-    flex:1;border:1px solid var(--line-strong);border-right:none;padding:11px 13px;font-size:13.5px;
+    flex:1;min-width:0;border:1px solid var(--line-strong);border-right:none;padding:9px 10px;font-size:13px;
     font-family:'IBM Plex Sans',sans-serif;outline:none;background:var(--paper);color:var(--ink);
   }
   .notify-form button{
     border:none;background:var(--marigold);color:var(--ink-deep);
-    padding:0 18px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;cursor:pointer;
+    padding:0 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;cursor:pointer;
   }
   .notify-form button:hover{background:var(--marigold-light);}
-  .notify-status{font-family:'IBM Plex Mono',monospace;font-size:11.5px;margin-top:7px;min-height:15px;}
+  .notify-status{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-top:7px;min-height:14px;}
   .notify-status.ok{color:var(--green);}
   .notify-status.err{color:var(--red);}
+  @media (max-width:480px){
+    .notify-popover{right:-8px;width:230px;}
+  }
 
   .desc-block{font-size:15px;line-height:1.85;color:var(--ink);white-space:pre-line;margin-bottom:30px;}
   .desc-block.empty{color:#544928;font-style:italic;}
@@ -1029,11 +1044,24 @@
     const displayTagColor = tagColorFor(displayTag);
 
     mainEl.innerHTML = `
-      <div class="cat-line">
-        ${catLabels[item.category] || item.category}
-        ${displayTag ? `<span class="stamp ${displayTagColor!=='red' ? displayTagColor : ''}">${displayTag}</span>` : ''}
+      <div class="title-row">
+        <div class="cat-line">
+          ${catLabels[item.category] || item.category}
+          ${displayTag ? `<span class="stamp ${displayTagColor!=='red' ? displayTagColor : ''}">${displayTag}</span>` : ''}
+        </div>
+        <h2 class="listing-title">${item.title}</h2>
+        <div class="notify-box" id="notifyBox">
+          <button type="button" class="notify-btn" id="notifyBtn" title="Get notified about updates to this listing" aria-label="Notify me about this listing">🔔</button>
+          <div class="notify-popover" id="notifyPopover">
+            <div class="notify-popover-label">Notify me about this listing</div>
+            <form class="notify-form" id="notifyForm">
+              <input type="email" id="notifyEmail" placeholder="you@example.com" required autocomplete="email">
+              <button type="submit">Go</button>
+            </form>
+            <div class="notify-status" id="notifyStatus"></div>
+          </div>
+        </div>
       </div>
-      <h2 class="listing-title">${item.title}</h2>
       ${(() => {
         const posted = formatDateTime(item.created_at);
         // only show "Updated" if the listing has actually been edited after being created
@@ -1045,14 +1073,6 @@
         <div><b>Department</b>${item.dept}</div>
         ${item.total_post ? `<div><b>Total Posts</b>${item.total_post}</div>` : ''}
         <div><b>Reference</b>${item.ref || '—'}</div>
-      </div>
-      <div class="notify-box" id="notifyBox">
-        <button type="button" class="notify-btn" id="notifyBtn">🔔 Notify Me About This Listing</button>
-        <form class="notify-form" id="notifyForm" style="display:none;">
-          <input type="email" id="notifyEmail" placeholder="you@example.com" required autocomplete="email">
-          <button type="submit">Confirm</button>
-        </form>
-        <div class="notify-status" id="notifyStatus"></div>
       </div>
 
       <div class="section-grid" style="margin-bottom:18px;">
@@ -1069,8 +1089,11 @@
   }
 
   // ---- per-listing email alert ("notify me about changes to this one") ----
+  // Small bell icon, top-right of the listing card. Click opens a compact popover
+  // with the email field; click elsewhere, or Escape, closes it again.
   function wireNotifyBox(listingId){
     const btn = document.getElementById('notifyBtn');
+    const popover = document.getElementById('notifyPopover');
     const form = document.getElementById('notifyForm');
     const emailInput = document.getElementById('notifyEmail');
     const status = document.getElementById('notifyStatus');
@@ -1078,14 +1101,31 @@
 
     const storageKey = 'sarkaridisha_notify_' + listingId;
     if(localStorage.getItem(storageKey)){
-      btn.textContent = '✓ You\'ll be notified about this listing';
+      btn.textContent = '✓';
+      btn.title = "You'll be notified about this listing";
+      btn.setAttribute('aria-label', "You'll be notified about this listing");
       btn.classList.add('is-on');
       return;
     }
 
-    btn.addEventListener('click', () => {
-      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
-      if(form.style.display === 'flex') emailInput.focus();
+    function closePopover(){
+      popover.classList.remove('open');
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popover.classList.toggle('open');
+      if(popover.classList.contains('open')) emailInput.focus();
+    });
+
+    document.addEventListener('click', (e) => {
+      if(popover.classList.contains('open') && !popover.contains(e.target) && e.target !== btn){
+        closePopover();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closePopover();
     });
 
     form.addEventListener('submit', async (e) => {
@@ -1104,12 +1144,14 @@
         status.textContent = 'Something went wrong — please try again.';
         status.className = 'notify-status err';
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Confirm';
+        submitBtn.textContent = 'Go';
         return;
       }
       localStorage.setItem(storageKey, '1');
-      form.style.display = 'none';
-      btn.textContent = '✓ You\'ll be notified about this listing';
+      closePopover();
+      btn.textContent = '✓';
+      btn.title = "You'll be notified about this listing";
+      btn.setAttribute('aria-label', "You'll be notified about this listing");
       btn.classList.add('is-on');
       status.textContent = 'Done! We\'ll email you when this listing changes.';
       status.className = 'notify-status ok';

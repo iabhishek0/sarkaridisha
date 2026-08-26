@@ -2148,6 +2148,7 @@
       status: row.status || 'published',
       created_by: row.created_by || null,
       description: row.description || '',
+      poster_url: row.poster_url || '',
       links: Array.isArray(row.links) && row.links.length > 0
         ? row.links
         : [row.apply_link, row.notification_link, row.official_link]
